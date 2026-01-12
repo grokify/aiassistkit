@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/grokify/aiassistkit/commands/schema/command.schema.json",
+  "title": "AI Assist Kit Command",
+  "description": "Canonical command/prompt definition for AI coding assistants",
+  "type": "object",
+  "required": ["name", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Command identifier (lowercase letters, numbers, and hyphens)",
+      "examples": ["release", "check", "version-next"]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Brief description of what the command does"
+    },
+    "arguments": {
+      "type": "array",
+      "description": "Command arguments",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Argument name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean"],
+            "default": "string",
+            "description": "Argument type"
+          },
+          "required": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the argument is required"
+          },
+          "default": {
+            "type": "string",
+            "description": "Default value if not provided"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Regex pattern for validation"
+          },
+          "hint": {
+            "type": "string",
+            "description": "User-facing hint (e.g., 'v1.2.3')"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the argument"
+          }
+        }
+      }
+    },
+    "instructions": {
+      "type": "string",
+      "description": "The full prompt/instructions content"
+    },
+    "process": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Ordered list of process steps"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Required CLI tools or dependencies"
+    },
+    "examples": {
+      "type": "array",
+      "description": "Usage examples",
+      "items": {
+        "type": "object",
+        "required": ["input"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the example"
+          },
+          "input": {
+            "type": "string",
+            "description": "Example input/invocation"
+          },
+          "output": {
+            "type": "string",
+            "description": "Expected output"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "release",
+      "description": "Execute full release workflow",
+      "arguments": [
+        {
+          "name": "version",
+          "type": "string",
+          "required": true,
+          "pattern": "^v?\\d+\\.\\d+\\.\\d+",
+          "hint": "v1.2.3",
+          "description": "Semantic version for the release"
+        }
+      ],
+      "instructions": "Execute a full release workflow with validation, changelog generation, and git tagging.",
+      "process": [
+        "Run validation checks",
+        "Generate changelog",
+        "Create and push git tag"
+      ],
+      "dependencies": ["git", "gh", "releaseagent"]
+    }
+  ]
+}
