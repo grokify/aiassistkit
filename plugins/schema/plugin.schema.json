@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/grokify/aiassistkit/plugins/schema/plugin.schema.json",
+  "title": "AI Assist Kit Plugin",
+  "description": "Canonical plugin/extension definition for AI coding assistants",
+  "type": "object",
+  "required": ["name", "version", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Plugin identifier (lowercase letters, numbers, and hyphens)",
+      "examples": ["release-agent", "my-plugin"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?(\\+[a-zA-Z0-9.]+)?$",
+      "description": "Semantic version (e.g., 1.0.0, 1.0.0-beta.1)",
+      "examples": ["1.0.0", "0.1.0", "2.0.0-rc.1"]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Brief description of what the plugin does"
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Plugin author name or organization"
+    },
+    "license": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "SPDX license identifier",
+      "examples": ["MIT", "Apache-2.0", "GPL-3.0"]
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the plugin source repository"
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the plugin homepage or documentation"
+    },
+    "commands": {
+      "type": "string",
+      "description": "Path to directory containing command spec files"
+    },
+    "skills": {
+      "type": "string",
+      "description": "Path to directory containing skill spec files"
+    },
+    "agents": {
+      "type": "string",
+      "description": "Path to directory containing agent spec files"
+    },
+    "context": {
+      "type": "string",
+      "description": "System prompt / context content for the plugin"
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Required or optional dependencies",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Dependency name"
+          },
+          "command": {
+            "type": "string",
+            "description": "CLI command to check if dependency is installed"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, missing dependency is a warning not an error"
+          }
+        }
+      }
+    },
+    "mcp_servers": {
+      "type": "object",
+      "description": "MCP server configurations",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["command"],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Command to start the MCP server"
+          },
+          "args": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Arguments to pass to the command"
+          },
+          "cwd": {
+            "type": "string",
+            "description": "Working directory for the server"
+          },
+          "env": {
+            "type": "object",
+            "additionalProperties": {"type": "string"},
+            "description": "Environment variables for the server"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "release-agent",
+      "version": "1.0.0",
+      "description": "Automated software release workflows",
+      "author": "grokify",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/grokify/release-agent",
+      "commands": "commands",
+      "skills": "skills",
+      "agents": "agents",
+      "dependencies": [
+        {"name": "git", "command": "git"},
+        {"name": "gh", "command": "gh"},
+        {"name": "releaseagent", "command": "releaseagent"},
+        {"name": "golangci-lint", "command": "golangci-lint", "optional": true}
+      ]
+    }
+  ]
+}
