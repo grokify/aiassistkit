@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/grokify/aiassistkit/teams/schema/team.schema.json",
+  "title": "Team",
+  "description": "A multi-agent team orchestration definition. Teams coordinate multiple agents to accomplish complex workflows.",
+  "type": "object",
+  "required": ["name", "process", "tasks"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique identifier for the team (e.g., 'release-team')",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Explains what this team accomplishes"
+    },
+    "process": {
+      "type": "string",
+      "description": "How tasks are executed within the team",
+      "enum": ["sequential", "parallel", "hierarchical"]
+    },
+    "manager": {
+      "type": "string",
+      "description": "The orchestrating agent (required for hierarchical process)"
+    },
+    "agents": {
+      "type": "array",
+      "description": "Agent names participating in this team",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Target version for release workflows (e.g., 'v1.2.3')"
+    },
+    "tasks": {
+      "type": "array",
+      "description": "Tasks to be executed by the team",
+      "items": {
+        "$ref": "#/$defs/task"
+      },
+      "minItems": 1
+    }
+  },
+  "if": {
+    "properties": {
+      "process": { "const": "hierarchical" }
+    }
+  },
+  "then": {
+    "required": ["manager"]
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "required": ["name", "agent"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Task identifier (e.g., 'qa-validation')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Explains what this task accomplishes"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Name of the agent assigned to this task"
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "Task names that must complete before this task",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subtasks": {
+          "type": "array",
+          "description": "Individual checks or actions within this task",
+          "items": {
+            "$ref": "#/$defs/subtask"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "description": "Data or context passed to the task",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "description": "Data or artifacts produced by the task",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "subtask": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Subtask identifier (e.g., 'build', 'tests', 'lint')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Explains what this subtask validates or does"
+        },
+        "command": {
+          "type": "string",
+          "description": "CLI command to execute (e.g., 'go build ./...')"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern to search for (presence indicates failure)"
+        },
+        "file": {
+          "type": "string",
+          "description": "Specific file that must exist"
+        },
+        "files": {
+          "type": "string",
+          "description": "Glob pattern for files to check (used with pattern)"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "If true, failure blocks workflow (NO-GO). If false, failure is a warning.",
+          "default": true
+        },
+        "expected_output": {
+          "type": "string",
+          "description": "Describes what successful execution looks like"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Timeout in seconds for command execution",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
