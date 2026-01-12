@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/grokify/aiassistkit/skills/schema/skill.schema.json",
+  "title": "AI Assist Kit Skill",
+  "description": "Canonical skill definition for AI coding assistants",
+  "type": "object",
+  "required": ["name", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Skill identifier (lowercase letters, numbers, and hyphens)",
+      "examples": ["version-analysis", "commit-classification"]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Brief description of what the skill does and when to use it"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "The full skill instructions/prompt content"
+    },
+    "scripts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Paths to executable script files"
+    },
+    "references": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Paths to reference documentation files"
+    },
+    "assets": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Paths to template or asset files"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Keywords that can invoke this skill"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Required CLI tools or dependencies"
+    }
+  },
+  "examples": [
+    {
+      "name": "version-analysis",
+      "description": "Analyze git history to determine semantic version bumps",
+      "instructions": "Analyze commits since the last tag and suggest the next semantic version based on conventional commits.\n\n1. Get current version from latest git tag\n2. Parse commits since that tag\n3. Classify commits by type\n4. Determine version bump (major/minor/patch)\n5. Suggest next version with reasoning",
+      "triggers": ["version", "semver", "next version"],
+      "dependencies": ["git", "schangelog"]
+    }
+  ]
+}
