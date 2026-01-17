@@ -10,37 +10,31 @@ AI Assist Kit is a Go library for managing configuration files across multiple A
 
 ## Supported Tools
 
-| Tool | MCP | Context | Plugins | Commands | Skills | Agents | Validation |
-|------|-----|---------|---------|----------|--------|--------|------------|
-| Claude Code | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Cursor IDE | ✅ | — | — | — | — | — | — |
-| Windsurf (Codeium) | ✅ | — | — | — | — | — | — |
-| VS Code / GitHub Copilot | ✅ | — | — | — | — | — | — |
-| OpenAI Codex CLI | ✅ | — | — | ✅ | ✅ | ✅ | ✅ |
-| Cline | ✅ | — | — | — | — | — | — |
-| Roo Code | ✅ | — | — | — | — | — | — |
-| AWS Kiro CLI | ✅ | — | — | — | — | ✅ | — |
-| Google Gemini CLI | — | — | ✅ | ✅ | — | ✅ | ✅ |
+| Tool | MCP Config | Hooks | Settings |
+|------|------------|-------|----------|
+| Claude Code / Claude Desktop | ✅ | ✅ | 🔜 |
+| Cursor IDE | ✅ | ✅ | 🔜 |
+| Windsurf (Codeium) | ✅ | ✅ | 🔜 |
+| VS Code / GitHub Copilot | ✅ | — | 🔜 |
+| OpenAI Codex CLI | ✅ | — | 🔜 |
+| Cline | ✅ | — | 🔜 |
+| Roo Code | ✅ | — | 🔜 |
+| AWS Kiro CLI | ✅ | — | 🔜 |
 
 ## Configuration Types
 
 | Type | Description | Status |
 |------|-------------|--------|
 | **MCP** | MCP server configurations | ✅ Available |
-| **Context** | Project context (CONTEXT.json → CLAUDE.md) | ✅ Available |
-| **Plugins** | Plugin/extension manifests | ✅ Available |
-| **Commands** | Slash command definitions | ✅ Available |
-| **Skills** | Reusable skill definitions | ✅ Available |
-| **Agents** | AI assistant agent definitions | ✅ Available |
-| **Teams** | Multi-agent team orchestration | ✅ Available |
-| **Validation** | Configuration validators | ✅ Available |
+| **Hooks** | Automation/lifecycle callbacks | ✅ Available |
 | **Settings** | Permissions, sandbox, general settings | 🔜 Coming soon |
 | **Rules** | Team rules, coding guidelines | 🔜 Coming soon |
+| **Memory** | CLAUDE.md, .cursorrules, etc. | 🔜 Coming soon |
 
 ## Installation
 
 ```bash
-go get github.com/grokify/aiassistkit
+go get github.com/agentplexus/aiassistkit
 ```
 
 ## MCP Configuration
@@ -55,8 +49,8 @@ package main
 import (
     "log"
 
-    "github.com/grokify/aiassistkit/mcp/claude"
-    "github.com/grokify/aiassistkit/mcp/vscode"
+    "github.com/agentplexus/aiassistkit/mcp/claude"
+    "github.com/agentplexus/aiassistkit/mcp/vscode"
 )
 
 func main() {
@@ -79,9 +73,9 @@ func main() {
 package main
 
 import (
-    "github.com/grokify/aiassistkit/mcp"
-    "github.com/grokify/aiassistkit/mcp/claude"
-    "github.com/grokify/aiassistkit/mcp/core"
+    "github.com/agentplexus/aiassistkit/mcp"
+    "github.com/agentplexus/aiassistkit/mcp/claude"
+    "github.com/agentplexus/aiassistkit/mcp/core"
 )
 
 func main() {
@@ -120,7 +114,7 @@ import (
     "log"
     "os"
 
-    "github.com/grokify/aiassistkit/mcp"
+    "github.com/agentplexus/aiassistkit/mcp"
 )
 
 func main() {
@@ -145,7 +139,7 @@ package main
 import (
     "log"
 
-    "github.com/grokify/aiassistkit/mcp"
+    "github.com/agentplexus/aiassistkit/mcp"
 )
 
 func main() {
@@ -264,43 +258,113 @@ Kiro uses a format similar to Claude with support for both local and remote MCP 
 - Workspace: `.kiro/settings/mcp.json`
 - User: `~/.kiro/settings/mcp.json`
 
+## Hooks Configuration
+
+The `hooks` subpackage provides adapters for automation/lifecycle hooks that execute at defined stages of the agent loop.
+
+### Creating Hooks
+
+```go
+package main
+
+import (
+    "github.com/agentplexus/aiassistkit/hooks"
+    "github.com/agentplexus/aiassistkit/hooks/claude"
+)
+
+func main() {
+    cfg := hooks.NewConfig()
+
+    // Add a command hook that runs before shell commands
+    cfg.AddHookWithMatcher(hooks.BeforeCommand, "Bash",
+        hooks.NewCommandHook("echo 'Running command...'"))
+
+    // Add a hook for file writes
+    cfg.AddHook(hooks.BeforeFileWrite,
+        hooks.NewCommandHook("./scripts/validate-write.sh"))
+
+    // Write to Claude format
+    claude.WriteProjectConfig(cfg)
+}
+```
+
+### Converting Between Formats
+
+```go
+package main
+
+import (
+    "log"
+    "os"
+
+    "github.com/agentplexus/aiassistkit/hooks"
+)
+
+func main() {
+    // Read Claude hooks JSON
+    data, _ := os.ReadFile(".claude/settings.json")
+
+    // Convert to Cursor format
+    cursorData, err := hooks.Convert(data, "claude", "cursor")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    os.WriteFile(".cursor/hooks.json", cursorData, 0644)
+}
+```
+
+### Supported Events
+
+| Event | Claude | Cursor | Windsurf | Description |
+|-------|--------|--------|----------|-------------|
+| `before_file_read` | ✅ | ✅ | ✅ | Before reading a file |
+| `after_file_read` | ✅ | ✅ | ✅ | After reading a file |
+| `before_file_write` | ✅ | ✅ | ✅ | Before writing a file |
+| `after_file_write` | ✅ | ✅ | ✅ | After writing a file |
+| `before_command` | ✅ | ✅ | ✅ | Before shell command execution |
+| `after_command` | ✅ | ✅ | ✅ | After shell command execution |
+| `before_mcp` | ✅ | ✅ | ✅ | Before MCP tool call |
+| `after_mcp` | ✅ | ✅ | ✅ | After MCP tool call |
+| `before_prompt` | ✅ | — | ✅ | Before user prompt processing |
+| `on_stop` | ✅ | ✅ | — | When agent stops |
+| `on_session_start` | ✅ | — | — | When session starts |
+| `on_session_end` | ✅ | — | — | When session ends |
+| `after_response` | — | ✅ | — | After AI response (Cursor-only) |
+| `after_thought` | — | ✅ | — | After AI thought (Cursor-only) |
+| `on_permission` | ✅ | — | — | Permission request (Claude-only) |
+
+### Hook Types
+
+- **Command hooks**: Execute shell commands
+- **Prompt hooks**: Run AI prompts (Claude-only)
+
 ## Project Structure
 
 ```
 aiassistkit/
 ├── aiassistkit.go          # Umbrella package
-├── mcp/                    # MCP server configurations (8 adapters)
-│   ├── claude/             # Claude Code / Claude Desktop
-│   ├── cursor/             # Cursor IDE
-│   ├── windsurf/           # Windsurf (Codeium)
-│   ├── vscode/             # VS Code / GitHub Copilot
-│   ├── codex/              # OpenAI Codex CLI (TOML)
-│   ├── cline/              # Cline VS Code extension
-│   ├── roo/                # Roo Code VS Code extension
-│   └── kiro/               # AWS Kiro CLI
 ├── context/                # Project context (CONTEXT.json → CLAUDE.md)
-│   └── claude/             # CLAUDE.md converter
-├── plugins/                # Plugin/extension manifests
-│   ├── claude/             # .claude-plugin/plugin.json
-│   └── gemini/             # gemini-extension.json
-├── commands/               # Slash command definitions
-│   ├── claude/             # commands/*.md
-│   ├── codex/              # prompts/*.md
-│   └── gemini/             # commands/*.toml
-├── skills/                 # Reusable skill definitions
-│   ├── claude/             # skills/*/SKILL.md
-│   └── codex/              # skills/*/SKILL.md
-├── agents/                 # AI assistant agent definitions
-│   ├── claude/             # agents/*.md
-│   ├── codex/              # Agent definitions
-│   ├── gemini/             # Agent definitions
-│   └── kiro/               # ~/.kiro/agents/*.json
-├── teams/                  # Multi-agent team orchestration
-│   └── core/               # Team, Task, Process types
-├── validation/             # Configuration validators
-│   ├── claude/             # Claude Code validator
-│   ├── codex/              # Codex CLI validator
-│   └── gemini/             # Gemini CLI validator
+│   ├── claude/             # CLAUDE.md converter
+│   └── core/               # Canonical types and converters
+├── hooks/                  # Hooks configurations
+│   ├── hooks.go            # Hooks package with re-exports
+│   ├── claude/             # Claude adapter
+│   ├── core/               # Canonical types
+│   ├── cursor/             # Cursor adapter
+│   └── windsurf/           # Windsurf adapter
+├── mcp/                    # MCP server configurations
+│   ├── mcp.go              # MCP package with re-exports
+│   ├── claude/             # Claude adapter
+│   ├── cline/              # Cline adapter
+│   ├── codex/              # Codex adapter (TOML)
+│   ├── core/               # Canonical types
+│   ├── cursor/             # Cursor adapter
+│   ├── kiro/               # AWS Kiro CLI adapter
+│   ├── roo/                # Roo Code adapter
+│   ├── vscode/             # VS Code adapter
+│   └── windsurf/           # Windsurf adapter
+├── memory/                 # Memory configurations (coming soon)
 ├── rules/                  # Rules configurations (coming soon)
 └── settings/               # Settings configurations (coming soon)
 ```
@@ -319,15 +383,15 @@ AI Assist Kit is part of the AgentPlexus family of Go modules for building AI ag
 
 MIT License - see [LICENSE](LICENSE) for details.
 
- [build-status-svg]: https://github.com/grokify/aiassistkit/actions/workflows/ci.yaml/badge.svg?branch=main
- [build-status-url]: https://github.com/grokify/aiassistkit/actions/workflows/ci.yaml
- [lint-status-svg]: https://github.com/grokify/aiassistkit/actions/workflows/lint.yaml/badge.svg?branch=main
- [lint-status-url]: https://github.com/grokify/aiassistkit/actions/workflows/lint.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/grokify/aiassistkit
- [goreport-url]: https://goreportcard.com/report/github.com/grokify/aiassistkit
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/grokify/aiassistkit
- [docs-godoc-url]: https://pkg.go.dev/github.com/grokify/aiassistkit
+ [build-status-svg]: https://github.com/agentplexus/aiassistkit/actions/workflows/ci.yaml/badge.svg?branch=main
+ [build-status-url]: https://github.com/agentplexus/aiassistkit/actions/workflows/ci.yaml
+ [lint-status-svg]: https://github.com/agentplexus/aiassistkit/actions/workflows/lint.yaml/badge.svg?branch=main
+ [lint-status-url]: https://github.com/agentplexus/aiassistkit/actions/workflows/lint.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/agentplexus/aiassistkit
+ [goreport-url]: https://goreportcard.com/report/github.com/agentplexus/aiassistkit
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/agentplexus/aiassistkit
+ [docs-godoc-url]: https://pkg.go.dev/github.com/agentplexus/aiassistkit
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/grokify/aiassistkit/blob/master/LICENSE
- [used-by-svg]: https://sourcegraph.com/github.com/grokify/aiassistkit/-/badge.svg
- [used-by-url]: https://sourcegraph.com/github.com/grokify/aiassistkit?badge
+ [license-url]: https://github.com/agentplexus/aiassistkit/blob/master/LICENSE
+ [used-by-svg]: https://sourcegraph.com/github.com/agentplexus/aiassistkit/-/badge.svg
+ [used-by-url]: https://sourcegraph.com/github.com/agentplexus/aiassistkit?badge

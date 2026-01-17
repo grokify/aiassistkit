@@ -11,9 +11,9 @@ The AI coding assistant ecosystem is fragmented:
 - **Claude Code** uses `.mcp.json`, `.claude-plugin/plugin.json`, `CLAUDE.md`
 - **Gemini CLI** uses `gemini-extension.json`, `GEMINI.md`, TOML commands
 - **OpenAI Codex** uses `config.toml`, `AGENTS.md`, Markdown prompts/skills
-- **Cursor IDE** uses `mcp.json`, `.cursorrules`
+- **Cursor IDE** uses `mcp.json`, `.cursorrules`, `hooks.json`
 - **VS Code Copilot** uses `mcp.json`, `copilot-instructions.md`
-- **Windsurf** uses `mcp_config.json`
+- **Windsurf** uses `mcp_config.json`, `hooks.json`
 
 Developers who use multiple tools must:
 
@@ -40,29 +40,38 @@ AI Assist Kit provides:
 
 ## Core Features
 
-### v0.1.0 - Initial Release (Completed)
+### v0.1.0 - Foundation (Completed)
 
 | Feature | Description |
 |---------|-------------|
 | MCP Configurations | Manage MCP server configs across 8 tools |
+| Hooks | Lifecycle hook configurations for 3 tools |
 | Context | Project context (CONTEXT.json) to CLAUDE.md |
+
+### v0.2.0 - Plugins & Commands
+
+| Feature | Description |
+|---------|-------------|
 | Plugin Manifests | Canonical plugin definition with Claude/Gemini adapters |
 | Commands/Prompts | Command definitions with Claude/Gemini/Codex adapters |
-| Skills | Skill definitions with Claude/Codex adapters |
-| Agents | Agent definitions with Claude/Codex/Gemini/Kiro adapters |
-| Teams | Multi-agent team orchestration types |
-| Validation | Configuration validators with Claude/Codex/Gemini adapters |
-| JSON Schemas | Validation schemas for all configuration types |
+| JSON Schemas | Validation schemas for plugins and commands |
 
-### v0.2.0 - Settings & Rules (Planned)
+### v0.3.0 - Skills & Agents
+
+| Feature | Description |
+|---------|-------------|
+| Skills | Skill definitions with Claude/Codex adapters |
+| Agents | Agent definitions with Claude adapter |
+| Context Converters | GEMINI.md and AGENTS.md generation |
+
+### v0.4.0 - Settings & Rules
 
 | Feature | Description |
 |---------|-------------|
 | Settings | Permission and sandbox configurations |
 | Rules | Coding guidelines (.cursorrules, copilot-instructions) |
-| Context Converters | GEMINI.md and AGENTS.md generation |
 
-### v1.0.0 - General Availability (Planned)
+### v1.0.0 - General Availability
 
 | Feature | Description |
 |---------|-------------|
@@ -72,17 +81,17 @@ AI Assist Kit provides:
 
 ## Supported Tools
 
-| Tool | MCP | Context | Plugins | Commands | Skills | Agents | Validation |
-|------|-----|---------|---------|----------|--------|--------|------------|
-| Claude Code | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Cursor IDE | ✅ | — | — | — | — | — | — |
-| Windsurf (Codeium) | ✅ | — | — | — | — | — | — |
-| VS Code / GitHub Copilot | ✅ | — | — | — | — | — | — |
-| OpenAI Codex CLI | ✅ | — | — | ✅ | ✅ | ✅ | ✅ |
-| Cline | ✅ | — | — | — | — | — | — |
-| Roo Code | ✅ | — | — | — | — | — | — |
-| AWS Kiro CLI | ✅ | — | — | — | — | ✅ | — |
-| Google Gemini CLI | — | — | ✅ | ✅ | — | ✅ | ✅ |
+| Tool | MCP | Hooks | Context | Plugins | Commands | Skills |
+|------|-----|-------|---------|---------|----------|--------|
+| Claude Code | ✅ | ✅ | ✅ | 🔜 | 🔜 | 🔜 |
+| Gemini CLI | — | — | 🔜 | 🔜 | 🔜 | — |
+| OpenAI Codex | ✅ | — | 🔜 | — | 🔜 | 🔜 |
+| Cursor IDE | ✅ | ✅ | 🔜 | — | — | — |
+| VS Code Copilot | ✅ | — | 🔜 | — | — | — |
+| Windsurf | ✅ | ✅ | — | — | — | — |
+| Cline | ✅ | — | — | — | — | — |
+| Roo Code | ✅ | — | — | — | — | — |
+| AWS Kiro | ✅ | — | — | — | — | — |
 
 ## User Workflows
 
@@ -110,6 +119,9 @@ plugins/codex/prompts/release.md
 ```bash
 # Convert Claude MCP config to VS Code format
 aiassistkit convert .mcp.json --from claude --to vscode -o .vscode/mcp.json
+
+# Convert Claude hooks to Cursor format
+aiassistkit convert .claude/settings.json --from claude --to cursor -o .cursor/hooks.json
 ```
 
 ### Validate Configurations

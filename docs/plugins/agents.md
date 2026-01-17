@@ -23,7 +23,7 @@ type Agent struct {
 package main
 
 import (
-    "github.com/grokify/aiassistkit/agents/core"
+    "github.com/agentplexus/aiassistkit/agents/core"
 )
 
 func main() {

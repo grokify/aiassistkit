@@ -1,0 +1,153 @@
+{
+  "$schema": "./context/schema/project-context.schema.json",
+  "name": "OmniConfig",
+  "description": "A Go library for managing configuration files across multiple AI coding assistants. Provides a unified interface for reading, writing, and converting between tool-specific configuration formats.",
+  "version": "0.1.0",
+  "language": "go",
+  "architecture": {
+    "pattern": "adapter",
+    "summary": "Uses the Adapter pattern with a canonical model approach. Tool-specific adapters convert to/from a canonical format, enabling N adapters instead of N² direct conversions. Adapters auto-register via init() functions.",
+    "diagrams": [
+      {
+        "title": "Conversion Flow",
+        "type": "ascii",
+        "content": "Tool A Format ──► Adapter A ──► Canonical Model ──► Adapter B ──► Tool B Format"
+      }
+    ]
+  },
+  "packages": [
+    {
+      "path": "mcp/core",
+      "purpose": "Canonical MCP types, Adapter interface, and registry"
+    },
+    {
+      "path": "mcp/claude",
+      "purpose": "Claude Code/Desktop MCP adapter (.mcp.json, ~/.claude.json)"
+    },
+    {
+      "path": "mcp/cursor",
+      "purpose": "Cursor IDE MCP adapter"
+    },
+    {
+      "path": "mcp/windsurf",
+      "purpose": "Windsurf/Codeium MCP adapter"
+    },
+    {
+      "path": "mcp/vscode",
+      "purpose": "VS Code MCP adapter (uses 'servers' key, supports inputs)"
+    },
+    {
+      "path": "mcp/codex",
+      "purpose": "OpenAI Codex CLI adapter (TOML format)"
+    },
+    {
+      "path": "mcp/cline",
+      "purpose": "Cline VS Code extension adapter"
+    },
+    {
+      "path": "mcp/roo",
+      "purpose": "Roo Code VS Code extension adapter"
+    },
+    {
+      "path": "mcp/kiro",
+      "purpose": "AWS Kiro CLI adapter (.kiro/settings/mcp.json)"
+    },
+    {
+      "path": "hooks/core",
+      "purpose": "Canonical hooks types, events, and adapter interface"
+    },
+    {
+      "path": "hooks/claude",
+      "purpose": "Claude Code hooks adapter (PreToolUse, PostToolUse, etc.)"
+    },
+    {
+      "path": "hooks/cursor",
+      "purpose": "Cursor IDE hooks adapter"
+    },
+    {
+      "path": "hooks/windsurf",
+      "purpose": "Windsurf hooks adapter"
+    },
+    {
+      "path": "context/core",
+      "purpose": "Project context types and converter registry"
+    },
+    {
+      "path": "context/claude",
+      "purpose": "CLAUDE.md converter from CONTEXT.json"
+    }
+  ],
+  "commands": {
+    "build": "go build ./...",
+    "test": "go test ./...",
+    "test-verbose": "go test ./... -v",
+    "test-coverage": "go test ./... -cover",
+    "vet": "go vet ./..."
+  },
+  "conventions": [
+    "Adapters implement the Adapter interface and register via init()",
+    "Use pointer bool (*bool) for tri-state fields where nil means default true",
+    "Custom errors implement Unwrap() for error chain inspection",
+    "Parse() and Marshal() work with []byte; ReadFile() and WriteFile() work with paths",
+    "Each adapter package has: adapter.go, config.go (tool-specific types), and adapter_test.go"
+  ],
+  "dependencies": {
+    "runtime": [
+      {
+        "name": "github.com/pelletier/go-toml/v2",
+        "purpose": "TOML parsing for Codex adapter"
+      }
+    ]
+  },
+  "testing": {
+    "framework": "go test",
+    "coverage": "hooks packages: 85-100%, MCP packages: varies (some at 0%)",
+    "patterns": [
+      "Table-driven tests with subtests",
+      "Round-trip tests (marshal → parse → compare)",
+      "Adapter conversion tests between formats",
+      "Event mapping validation tests"
+    ]
+  },
+  "files": {
+    "entryPoints": [
+      "omniconfig.go"
+    ],
+    "config": [
+      "go.mod",
+      "go.sum",
+      "CONTEXT.json"
+    ]
+  },
+  "notes": [
+    {
+      "title": "Module Path",
+      "content": "The go.mod uses github.com/agentplexus/aiassistkit as the module path",
+      "severity": "info"
+    },
+    {
+      "title": "MCP Test Coverage Gap",
+      "content": "Several MCP adapters (cline, codex, cursor, roo, vscode, windsurf) have 0% test coverage",
+      "severity": "warning"
+    },
+    {
+      "title": "Supported Configuration Types",
+      "content": "MCP and Hooks are implemented. Settings, Rules, and Memory are planned for future versions.",
+      "severity": "info"
+    }
+  ],
+  "related": [
+    {
+      "name": "OmniLLM",
+      "description": "LLM provider abstraction (part of Omni family)"
+    },
+    {
+      "name": "OmniSerp",
+      "description": "Search engine abstraction (part of Omni family)"
+    },
+    {
+      "name": "OmniObserve",
+      "description": "Observability abstraction (part of Omni family)"
+    }
+  ]
+}

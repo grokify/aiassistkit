@@ -8,7 +8,7 @@ This guide walks you through creating a simple plugin that works with multiple A
 mkdir my-plugin
 cd my-plugin
 go mod init github.com/yourname/my-plugin
-go get github.com/grokify/aiassistkit
+go get github.com/agentplexus/aiassistkit
 ```
 
 ## Step 2: Define a Canonical Command
@@ -36,10 +36,10 @@ import (
     "log"
     "os"
 
-    "github.com/grokify/aiassistkit/commands/core"
-    "github.com/grokify/aiassistkit/commands/claude"
-    "github.com/grokify/aiassistkit/commands/gemini"
-    "github.com/grokify/aiassistkit/plugins/core"
+    "github.com/agentplexus/aiassistkit/commands/core"
+    "github.com/agentplexus/aiassistkit/commands/claude"
+    "github.com/agentplexus/aiassistkit/commands/gemini"
+    "github.com/agentplexus/aiassistkit/plugins/core"
 )
 
 func main() {

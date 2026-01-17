@@ -1,11 +1,31 @@
 {
   "ir_version": "1.0",
   "project": "aiassistkit",
-  "repository": "https://github.com/grokify/aiassistkit",
+  "repository": "https://github.com/agentplexus/aiassistkit",
   "versioning": "semver",
   "commit_convention": "conventional",
-  "maintainers": ["grokify"],
+  "maintainers": ["agentplexus"],
   "releases": [
+    {
+      "version": "v0.4.0",
+      "date": "2026-01-17",
+      "highlights": [
+        { "description": "Migration to agentplexus organization with hooks package for AI assistant lifecycle events" }
+      ],
+      "added": [
+        { "description": "`hooks` package with adapters for AI assistant lifecycle hooks (Claude, Cursor, Windsurf)" },
+        { "description": "`hooks/core` with canonical hook types, events, and adapter interface" },
+        { "description": "`hooks/claude` adapter for Claude Code hooks (PreToolUse, PostToolUse, etc.)" },
+        { "description": "`hooks/cursor` adapter for Cursor IDE hooks" },
+        { "description": "`hooks/windsurf` adapter for Windsurf hooks" }
+      ],
+      "changed": [
+        { "description": "Module path changed from `github.com/grokify/aiassistkit` to `github.com/agentplexus/aiassistkit`" }
+      ],
+      "dependencies": [
+        { "description": "Added `github.com/agentplexus/multi-agent-spec/sdk/go` for multi-agent specifications" }
+      ]
+    },
     {
       "version": "v0.3.0",
       "date": "2026-01-17",

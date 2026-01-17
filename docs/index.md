@@ -28,7 +28,7 @@ Define a canonical command:
 package main
 
 import (
-    "github.com/grokify/aiassistkit/commands/core"
+    "github.com/agentplexus/aiassistkit/commands/core"
 )
 
 func main() {

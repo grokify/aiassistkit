@@ -1,7 +1,7 @@
 {
   "ir_version": "1.0",
   "project": "AI Assist Kit",
-  "repository": "https://github.com/grokify/aiassistkit",
+  "repository": "https://github.com/agentplexus/aiassistkit",
 
   "legend": {
     "completed": {"emoji": "✅", "description": "Completed"},
@@ -20,24 +20,38 @@
   "phases": [
     {
       "id": "v0.1",
-      "name": "v0.1.0 - Initial Release",
+      "name": "v0.1.0 - Foundation",
       "status": "completed",
       "order": 1,
-      "description": "Complete configuration management for AI coding assistants"
+      "description": "Initial release with MCP and Hooks support"
     },
     {
       "id": "v0.2",
-      "name": "v0.2.0 - Settings & Rules",
-      "status": "planned",
+      "name": "v0.2.0 - Plugins & Commands",
+      "status": "in_progress",
       "order": 2,
+      "description": "Add plugin manifests and command definitions"
+    },
+    {
+      "id": "v0.3",
+      "name": "v0.3.0 - Skills & Agents",
+      "status": "planned",
+      "order": 3,
+      "description": "Add skills and agent definitions"
+    },
+    {
+      "id": "v0.4",
+      "name": "v0.4.0 - Settings & Rules",
+      "status": "planned",
+      "order": 4,
       "description": "Add settings and rules configurations"
     },
     {
       "id": "v1.0",
       "name": "v1.0.0 - General Availability",
       "status": "planned",
-      "order": 3,
-      "description": "Production-ready release with CLI tool"
+      "order": 5,
+      "description": "Production-ready release with full feature set"
     },
     {
       "id": "future",
@@ -149,6 +163,50 @@
       "priority": "medium"
     },
     {
+      "id": "hooks-core",
+      "title": "Hooks core types",
+      "description": "Canonical Config, Hook, Event types for lifecycle hooks",
+      "status": "completed",
+      "version": "0.1.0",
+      "phase": "v0.1",
+      "area": "config",
+      "type": "Added",
+      "priority": "high"
+    },
+    {
+      "id": "hooks-claude",
+      "title": "Claude hooks adapter",
+      "description": "Claude Code .claude/settings.json hooks support",
+      "status": "completed",
+      "version": "0.1.0",
+      "phase": "v0.1",
+      "area": "tools",
+      "type": "Added",
+      "priority": "high"
+    },
+    {
+      "id": "hooks-cursor",
+      "title": "Cursor hooks adapter",
+      "description": "Cursor IDE .cursor/hooks.json support",
+      "status": "completed",
+      "version": "0.1.0",
+      "phase": "v0.1",
+      "area": "tools",
+      "type": "Added",
+      "priority": "high"
+    },
+    {
+      "id": "hooks-windsurf",
+      "title": "Windsurf hooks adapter",
+      "description": "Windsurf .windsurf/hooks.json support",
+      "status": "completed",
+      "version": "0.1.0",
+      "phase": "v0.1",
+      "area": "tools",
+      "type": "Added",
+      "priority": "high"
+    },
+    {
       "id": "context-core",
       "title": "Context core types",
       "description": "Canonical Context, Architecture, Package types",
@@ -171,12 +229,23 @@
       "priority": "high"
     },
     {
-      "id": "plugins-core",
-      "title": "Plugin core types",
-      "description": "Canonical Plugin struct for manifests",
+      "id": "context-schema",
+      "title": "Context JSON Schema",
+      "description": "project-context.schema.json for validation",
       "status": "completed",
       "version": "0.1.0",
       "phase": "v0.1",
+      "area": "core",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "plugins-core",
+      "title": "Plugin core types",
+      "description": "Canonical Plugin struct for manifests",
+      "status": "in_progress",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -185,9 +254,9 @@
       "id": "plugins-schema",
       "title": "Plugin JSON Schema",
       "description": "plugin.schema.json for validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -196,9 +265,9 @@
       "id": "plugins-claude",
       "title": "Claude plugin adapter",
       "description": "Generate .claude-plugin/plugin.json",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -207,9 +276,9 @@
       "id": "plugins-gemini",
       "title": "Gemini extension adapter",
       "description": "Generate gemini-extension.json",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -218,9 +287,9 @@
       "id": "commands-core",
       "title": "Command core types",
       "description": "Canonical Command struct for prompts/commands",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -229,9 +298,9 @@
       "id": "commands-schema",
       "title": "Command JSON Schema",
       "description": "command.schema.json for validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -240,9 +309,9 @@
       "id": "commands-claude",
       "title": "Claude command adapter",
       "description": "Generate commands/*.md (Markdown + YAML)",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -251,9 +320,9 @@
       "id": "commands-gemini",
       "title": "Gemini command adapter",
       "description": "Generate commands/*.toml (TOML)",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -262,9 +331,9 @@
       "id": "commands-codex",
       "title": "Codex prompt adapter",
       "description": "Generate prompts/*.md (Markdown + YAML)",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.2.0",
+      "phase": "v0.2",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -273,9 +342,9 @@
       "id": "skills-core",
       "title": "Skill core types",
       "description": "Canonical Skill struct for skills",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -284,9 +353,9 @@
       "id": "skills-schema",
       "title": "Skill JSON Schema",
       "description": "skill.schema.json for validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -295,9 +364,9 @@
       "id": "skills-claude",
       "title": "Claude skill adapter",
       "description": "Generate skills/*/SKILL.md",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -306,9 +375,9 @@
       "id": "skills-codex",
       "title": "Codex skill adapter",
       "description": "Generate skills/*/SKILL.md",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
@@ -317,196 +386,92 @@
       "id": "agents-core",
       "title": "Agent core types",
       "description": "Canonical Agent struct for agent definitions",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
       "priority": "high"
+    },
+    {
+      "id": "agents-parser",
+      "title": "Agent Markdown+YAML parser",
+      "description": "Parse Markdown files with YAML frontmatter to Agent struct",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
+      "area": "plugins",
+      "type": "Added",
+      "priority": "high",
+      "depends_on": ["agents-core"]
     },
     {
       "id": "agents-schema",
       "title": "Agent JSON Schema",
       "description": "agent.schema.json for validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
-      "priority": "high"
+      "priority": "high",
+      "depends_on": ["agents-core"]
     },
     {
       "id": "agents-claude",
       "title": "Claude Code agent adapter",
       "description": "Generate agents/*.md for Claude Code",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
-      "priority": "high"
+      "priority": "high",
+      "depends_on": ["agents-parser"]
     },
     {
       "id": "agents-gemini",
       "title": "Gemini CLI agent adapter",
       "description": "Generate agent definitions for Gemini CLI",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
-      "priority": "high"
+      "priority": "high",
+      "depends_on": ["agents-parser"]
     },
     {
       "id": "agents-codex",
       "title": "Codex CLI agent adapter",
       "description": "Generate agent definitions for OpenAI Codex CLI",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
+      "status": "planned",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "plugins",
       "type": "Added",
-      "priority": "high"
+      "priority": "high",
+      "depends_on": ["agents-parser"]
     },
     {
       "id": "agents-kiro",
       "title": "Kiro CLI agent adapter",
       "description": "Generate agent definitions for AWS Kiro CLI",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "teams-core",
-      "title": "Teams core types",
-      "description": "Team, Task, Subtask, Process, Status types for multi-agent orchestration",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "teams-schema",
-      "title": "Teams JSON Schema",
-      "description": "team.schema.json for validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "validation-core",
-      "title": "Validation core types",
-      "description": "ValidationArea, Check types for release validation",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "validation-claude",
-      "title": "Claude validation adapter",
-      "description": "Validation adapter for Claude Code",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "validation-codex",
-      "title": "Codex validation adapter",
-      "description": "Validation adapter for OpenAI Codex CLI",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "validation-gemini",
-      "title": "Gemini validation adapter",
-      "description": "Validation adapter for Google Gemini CLI",
-      "status": "completed",
-      "version": "0.1.0",
-      "phase": "v0.1",
-      "area": "plugins",
-      "type": "Added",
-      "priority": "high"
-    },
-    {
-      "id": "settings-core",
-      "title": "Settings core types",
-      "description": "Canonical Settings struct for permissions/sandbox",
       "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
-      "area": "config",
+      "version": "0.3.0",
+      "phase": "v0.3",
+      "area": "plugins",
       "type": "Added",
-      "priority": "medium"
-    },
-    {
-      "id": "settings-claude",
-      "title": "Claude settings adapter",
-      "description": "Claude Code settings.json support",
-      "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
-      "area": "tools",
-      "type": "Added",
-      "priority": "medium"
-    },
-    {
-      "id": "rules-core",
-      "title": "Rules core types",
-      "description": "Canonical Rules struct for coding guidelines",
-      "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
-      "area": "config",
-      "type": "Added",
-      "priority": "medium"
-    },
-    {
-      "id": "rules-cursor",
-      "title": "Cursor rules adapter",
-      "description": ".cursorrules generation",
-      "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
-      "area": "tools",
-      "type": "Added",
-      "priority": "medium"
-    },
-    {
-      "id": "rules-copilot",
-      "title": "Copilot instructions adapter",
-      "description": ".github/copilot-instructions.md generation",
-      "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
-      "area": "tools",
-      "type": "Added",
-      "priority": "medium"
+      "priority": "high",
+      "depends_on": ["agents-parser"]
     },
     {
       "id": "context-gemini",
       "title": "Gemini context converter",
       "description": "CONTEXT.json to GEMINI.md converter",
       "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
+      "version": "0.3.0",
+      "phase": "v0.3",
       "area": "tools",
       "type": "Added",
       "priority": "medium"
@@ -516,8 +481,63 @@
       "title": "Codex context converter",
       "description": "CONTEXT.json to AGENTS.md converter",
       "status": "planned",
-      "version": "0.2.0",
-      "phase": "v0.2",
+      "version": "0.3.0",
+      "phase": "v0.3",
+      "area": "tools",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "settings-core",
+      "title": "Settings core types",
+      "description": "Canonical Settings struct for permissions/sandbox",
+      "status": "planned",
+      "version": "0.4.0",
+      "phase": "v0.4",
+      "area": "config",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "settings-claude",
+      "title": "Claude settings adapter",
+      "description": "Claude Code settings.json support",
+      "status": "planned",
+      "version": "0.4.0",
+      "phase": "v0.4",
+      "area": "tools",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "rules-core",
+      "title": "Rules core types",
+      "description": "Canonical Rules struct for coding guidelines",
+      "status": "planned",
+      "version": "0.4.0",
+      "phase": "v0.4",
+      "area": "config",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "rules-cursor",
+      "title": "Cursor rules adapter",
+      "description": ".cursorrules generation",
+      "status": "planned",
+      "version": "0.4.0",
+      "phase": "v0.4",
+      "area": "tools",
+      "type": "Added",
+      "priority": "medium"
+    },
+    {
+      "id": "rules-copilot",
+      "title": "Copilot instructions adapter",
+      "description": ".github/copilot-instructions.md generation",
+      "status": "planned",
+      "version": "0.4.0",
+      "phase": "v0.4",
       "area": "tools",
       "type": "Added",
       "priority": "medium"
@@ -611,8 +631,10 @@
   ],
 
   "version_history": [
-    {"version": "0.1.0", "date": "2026-01-12", "status": "completed", "summary": "Initial release with MCP, Context, Plugins, Commands, Skills, Agents, Teams, Validation"},
-    {"version": "0.2.0", "date": null, "status": "planned", "summary": "Settings and Rules"},
+    {"version": "0.1.0", "date": "2026-01-03", "status": "completed", "summary": "MCP, Hooks, Context support"},
+    {"version": "0.2.0", "date": null, "status": "in_progress", "summary": "Plugins and Commands"},
+    {"version": "0.3.0", "date": null, "status": "planned", "summary": "Skills and Agents"},
+    {"version": "0.4.0", "date": null, "status": "planned", "summary": "Settings and Rules"},
     {"version": "1.0.0", "date": null, "status": "planned", "summary": "General availability with CLI"}
   ]
 }

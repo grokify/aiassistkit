@@ -1,15 +1,19 @@
 ---
 marp: true
-theme: vibeminds
+theme: agentplexus
 paginate: true
-header: "AI Assist Kit: Unified AI Assistant Configuration"
+header: "OmniConfig: Unified AI Assistant Configuration"
+style: |
+  @import '../agentplexus-assets-integernal/agentplexus.css';
 ---
 
-# AI Assist Kit
+# OmniConfig
 
 ## Unified Configuration Management for AI Coding Assistants
 
 A Go library for reading, writing, and converting between tool-specific configuration formats.
+
+**Version:** 0.1.0
 
 ---
 
@@ -24,7 +28,6 @@ Each AI coding assistant has its own configuration format:
 | VS Code | `settings.json` | JSON |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` | JSON |
 | Codex | `codex.toml` | TOML |
-| Kiro | `.kiro/settings/mcp.json` | JSON |
 
 **Result:** N tools = N different configs to maintain
 
@@ -56,55 +59,40 @@ Tool A Format ──► Adapter A ──► Canonical Model ──► Adapter B 
 | **Cline** | Cline VS Code extension |
 | **Roo** | Roo Code VS Code extension |
 | **Kiro** | AWS Kiro CLI |
-| **Gemini** | Google Gemini CLI |
 
 ---
 
 # Configuration Types
 
-## Available Now
+## Currently Implemented
 
-| Type | Description |
-|------|-------------|
-| **MCP** | Model Context Protocol server configurations |
-| **Agents** | AI assistant agent definitions |
-| **Commands** | Slash command definitions |
-| **Plugins** | Plugin/extension configurations |
-| **Skills** | Reusable skill definitions |
-| **Teams** | Multi-agent team configurations |
-| **Validation** | Configuration validators |
+- **MCP** - Model Context Protocol server configurations
+- **Hooks** - Automation/lifecycle callbacks
+
+## Planned
+
+- **Settings** - Permissions, sandbox, general settings
+- **Rules** - Team rules, coding guidelines
+- **Memory** - CLAUDE.md, .cursorrules, etc.
 
 ---
 
 # Architecture Overview
 
 ```
-aiassistkit/
-├── mcp/           # MCP server configurations
-├── agents/        # Agent definitions
-├── commands/      # Slash commands
-├── plugins/       # Plugin configs
-├── skills/        # Skill definitions
-├── teams/         # Team configurations
-├── validation/    # Config validators
-└── context/       # Project context converters
-```
-
----
-
-# Package Structure
-
-Each package follows the adapter pattern:
-
-```
-mcp/
-├── core/          # Canonical types + registry
-├── claude/        # Claude adapter
-├── cursor/        # Cursor adapter
-├── vscode/        # VS Code adapter
-├── codex/         # Codex adapter (TOML)
-├── kiro/          # Kiro adapter
-└── ...            # Other adapters
+omniconfig/
+├── mcp/
+│   ├── core/          # Canonical types + registry
+│   ├── claude/        # Claude adapter
+│   ├── cursor/        # Cursor adapter
+│   ├── vscode/        # VS Code adapter
+│   └── ...            # Other adapters
+├── hooks/
+│   ├── core/          # Canonical hooks types
+│   └── claude/        # Claude hooks adapter
+└── context/
+    ├── core/          # Project context types
+    └── claude/        # CLAUDE.md converter
 ```
 
 ---
@@ -156,7 +144,7 @@ type Server struct {
 
 ```go
 import (
-    "github.com/grokify/aiassistkit/mcp/claude"
+    "github.com/agentplexus/aiassistkit/mcp/claude"
 )
 
 // Read Claude's project config
@@ -177,9 +165,9 @@ for name, server := range cfg.Servers {
 
 ```go
 import (
-    "github.com/grokify/aiassistkit/mcp/core"
-    _ "github.com/grokify/aiassistkit/mcp/claude"
-    _ "github.com/grokify/aiassistkit/mcp/vscode"
+    "github.com/agentplexus/aiassistkit/mcp/core"
+    _ "github.com/agentplexus/aiassistkit/mcp/claude"
+    _ "github.com/agentplexus/aiassistkit/mcp/vscode"
 )
 
 // Convert Claude config to VS Code format
@@ -197,8 +185,8 @@ Adapters auto-register via `init()` functions.
 
 ```go
 import (
-    "github.com/grokify/aiassistkit/mcp/core"
-    "github.com/grokify/aiassistkit/mcp/vscode"
+    "github.com/agentplexus/aiassistkit/mcp/core"
+    "github.com/agentplexus/aiassistkit/mcp/vscode"
 )
 
 // Create a new config
@@ -215,63 +203,60 @@ vscode.NewAdapter().WriteFile(cfg, ".vscode/settings.json")
 
 ---
 
-# Agents Package
+# Hooks System
 
-Define AI assistant agents with tools and skills:
+## Lifecycle Events
+
+| Event | Description |
+|-------|-------------|
+| PreToolUse | Before tool execution |
+| PostToolUse | After tool execution |
+| PrePromptSubmit | Before sending prompt |
+| Notification | On notifications |
+| Stop | On stop signal |
+
+---
+
+# Hooks Configuration
 
 ```go
-import "github.com/grokify/aiassistkit/agents"
+import (
+    "github.com/agentplexus/aiassistkit/hooks/core"
+)
 
-agent := agents.NewAgent("release-coordinator",
-    "Orchestrates software releases")
-agent.SetModel("sonnet")
-agent.AddTools("Read", "Write", "Bash", "Glob", "Grep")
-agent.AddSkills("version-analysis", "commit-classification")
+cfg := core.NewConfig()
 
-// Write to Claude format
-claudeAdapter, _ := agents.GetAdapter("claude")
-claudeAdapter.WriteFile(agent, "./agents/release-coordinator.md")
+// Add a hook for pre-tool-use event
+cfg.AddHook(core.EventPreToolUse, core.Hook{
+    Type:    core.HookTypeCommand,
+    Command: "echo 'Tool about to run'",
+})
+
+// Add with matcher (tool-specific)
+cfg.AddHookWithMatcher(core.EventPreToolUse, "Bash", core.Hook{
+    Type:    core.HookTypeCommand,
+    Command: "echo 'Bash tool running'",
+})
 ```
 
 ---
 
-# Commands Package
+# Context System
 
-Define slash commands across tools:
-
-```go
-import "github.com/grokify/aiassistkit/commands"
-
-cmd := commands.NewCommand("deploy", "Deploy to production")
-cmd.AddRequiredArgument("environment", "Target environment")
-cmd.AddOptionalArgument("--dry-run", "Preview without changes")
-
-// Write to Claude format (Markdown)
-claudeAdapter, _ := commands.GetAdapter("claude")
-claudeAdapter.WriteFile(cmd, "./commands/deploy.md")
-
-// Write to Gemini format (TOML)
-geminiAdapter, _ := commands.GetAdapter("gemini")
-geminiAdapter.WriteFile(cmd, "./commands/deploy.toml")
-```
-
----
-
-# Skills Package
-
-Define reusable skills:
+## CONTEXT.json → CLAUDE.md
 
 ```go
-import "github.com/grokify/aiassistkit/skills"
+import (
+    "github.com/agentplexus/aiassistkit/context/core"
+    "github.com/agentplexus/aiassistkit/context/claude"
+)
 
-skill := skills.NewSkill("code-review", "Reviews code for issues")
-skill.SetPrompt("Review this code for bugs and improvements...")
-skill.AddDependency("Read")
-skill.AddDependency("Grep")
+// Read CONTEXT.json
+ctx, _ := core.ReadFile("CONTEXT.json")
 
-// Write to Claude format
-claudeAdapter, _ := skills.GetAdapter("claude")
-claudeAdapter.WriteSkillDir(skill, "./skills/")
+// Convert to CLAUDE.md
+converter := claude.NewConverter()
+markdown, _ := converter.Convert(ctx)
 ```
 
 ---
@@ -360,14 +345,18 @@ mcp/claude/
 
 ---
 
-# Version History
+# Roadmap
 
-## v0.1.0
-- 6 new packages: agents, commands, plugins, skills, teams, validation
-- Expanded tool support with Gemini adapters
-- Full documentation (PRD, TRD, ROADMAP)
+## v0.1.0 (Current)
 - MCP configuration support
+- Hooks configuration support
 - 8 tool adapters
+
+## Future
+- Settings configuration
+- Rules configuration
+- Memory/context files
+- CLI tool for conversion
 
 ---
 
@@ -375,15 +364,26 @@ mcp/claude/
 
 ```bash
 # Install
-go get github.com/grokify/aiassistkit
+go get github.com/agentplexus/aiassistkit
 
 # Import adapters you need
 import (
-    "github.com/grokify/aiassistkit/mcp/core"
-    _ "github.com/grokify/aiassistkit/mcp/claude"
-    _ "github.com/grokify/aiassistkit/mcp/cursor"
+    "github.com/agentplexus/aiassistkit/mcp/core"
+    _ "github.com/agentplexus/aiassistkit/mcp/claude"
+    _ "github.com/agentplexus/aiassistkit/mcp/cursor"
 )
 ```
+
+---
+
+# Part of the Omni Family
+
+| Module | Purpose |
+|--------|---------|
+| **OmniConfig** | AI assistant configuration |
+| OmniLLM | LLM provider abstraction |
+| OmniSerp | Search engine abstraction |
+| OmniObserve | Observability abstraction |
 
 ---
 
@@ -391,8 +391,8 @@ import (
 
 # Thank You
 
-**GitHub:** github.com/grokify/aiassistkit
+**GitHub:** github.com/agentplexus/aiassistkit
 
-**License:** MIT
+**License:** Open Source
 
 Questions?

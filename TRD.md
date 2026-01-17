@@ -9,7 +9,7 @@ AI Assist Kit follows the adapter pattern with canonical types at the core and t
 │                         aiassistkit                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐            │
-│  │ plugins │  │commands │  │ skills  │  │ agents  │            │
+│  │ plugins │  │commands │  │ skills  │  │ agents  │  NEW       │
 │  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘            │
 │       │            │            │            │                  │
 │  ┌────┴────────────┴────────────┴────────────┴────┐            │
@@ -18,12 +18,12 @@ AI Assist Kit follows the adapter pattern with canonical types at the core and t
 │  └────┬────────────┬────────────┬────────────┬────┘            │
 │       │            │            │            │                  │
 │  ┌────┴────┐  ┌────┴────┐  ┌────┴────┐  ┌────┴────┐            │
-│  │ claude/ │  │ gemini/ │  │ codex/  │  │  kiro/  │  Adapters  │
+│  │ claude/ │  │ gemini/ │  │ codex/  │  │ cursor/ │  Adapters  │
 │  └─────────┘  └─────────┘  └─────────┘  └─────────┘            │
 ├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────────┐           │
-│  │   mcp   │  │ context │  │  teams  │  │validation│           │
-│  └─────────┘  └─────────┘  └─────────┘  └──────────┘           │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐                         │
+│  │   mcp   │  │  hooks  │  │ context │  EXISTING               │
+│  └─────────┘  └─────────┘  └─────────┘                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -34,7 +34,7 @@ aiassistkit/
 ├── aiassistkit.go              # Umbrella package, version info
 ├── go.mod
 │
-├── plugins/                    # Plugin/extension manifests
+├── plugins/                    # NEW: Plugin/extension manifests
 │   ├── plugins.go              # Package umbrella with re-exports
 │   ├── core/
 │   │   ├── plugin.go           # Plugin struct
@@ -49,7 +49,7 @@ aiassistkit/
 │   └── schema/
 │       └── plugin.schema.json  # JSON Schema
 │
-├── commands/                   # Commands/prompts
+├── commands/                   # NEW: Commands/prompts
 │   ├── commands.go             # Package umbrella
 │   ├── core/
 │   │   ├── command.go          # Command struct
@@ -64,7 +64,7 @@ aiassistkit/
 │   └── schema/
 │       └── command.schema.json # JSON Schema
 │
-├── skills/                     # Skill definitions
+├── skills/                     # NEW: Skill definitions
 │   ├── skills.go               # Package umbrella
 │   ├── core/
 │   │   ├── skill.go            # Skill struct
@@ -77,7 +77,7 @@ aiassistkit/
 │   └── schema/
 │       └── skill.schema.json   # JSON Schema
 │
-├── agents/                     # Agent definitions
+├── agents/                     # NEW: Agent definitions
 │   ├── agents.go               # Package umbrella
 │   ├── core/
 │   │   ├── agent.go            # Agent struct
@@ -88,10 +88,9 @@ aiassistkit/
 │   └── schema/
 │       └── agent.schema.json   # JSON Schema
 │
-├── mcp/                        # MCP configurations
-├── context/                    # Project context
-├── teams/                      # Multi-agent team orchestration
-├── validation/                 # Configuration validators
+├── mcp/                        # EXISTING: MCP configurations
+├── hooks/                      # EXISTING: Lifecycle hooks
+├── context/                    # EXISTING: Project context
 │
 └── cmd/
     └── aiassistkit/            # CLI tool
@@ -115,9 +114,10 @@ type Plugin struct {
     Homepage    string `json:"homepage,omitempty"`
 
     // Components
-    Commands string `json:"commands,omitempty"` // Directory containing command specs
-    Skills   string `json:"skills,omitempty"`   // Directory containing skill specs
-    Agents   string `json:"agents,omitempty"`   // Directory containing agent specs
+    Commands []string `json:"commands,omitempty"` // Paths to command specs
+    Skills   []string `json:"skills,omitempty"`   // Paths to skill specs
+    Agents   []string `json:"agents,omitempty"`   // Paths to agent specs
+    Hooks    string   `json:"hooks,omitempty"`    // Path to hooks spec
 
     // Dependencies
     Dependencies []Dependency `json:"dependencies,omitempty"`
@@ -330,7 +330,7 @@ Process:
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/grokify/aiassistkit/plugins/schema/plugin.schema.json",
+  "$id": "https://github.com/agentplexus/aiassistkit/plugins/schema/plugin.schema.json",
   "title": "AI Assist Kit Plugin",
   "description": "Canonical plugin/extension definition",
   "type": "object",
