@@ -7,6 +7,22 @@
   "maintainers": ["grokify"],
   "releases": [
     {
+      "version": "v0.3.0",
+      "date": "2026-01-17",
+      "highlights": [
+        { "description": "Automated marketplace publishing with GitHub PR creation" }
+      ],
+      "added": [
+        { "description": "`publish` package for automated plugin submission to AI assistant marketplaces", "commit": "f51322d" },
+        { "description": "`publish/claude` adapter for Claude Code marketplace (anthropics/claude-plugins-official)", "commit": "f51322d" },
+        { "description": "`publish/github` client wrapper using gogithub for GitHub API operations", "commit": "f51322d" }
+      ],
+      "dependencies": [
+        { "description": "Added `github.com/grokify/gogithub` v0.5.0 for GitHub API utilities", "commit": "f51322d" },
+        { "description": "Added `github.com/google/go-github/v81` for GitHub API client", "commit": "f51322d" }
+      ]
+    },
+    {
       "version": "v0.2.0",
       "date": "2026-01-17",
       "highlights": [

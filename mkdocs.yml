@@ -60,6 +60,7 @@ nav:
       - Claude Marketplace: publishing/claude-marketplace.md
       - Gemini Marketplace: publishing/gemini-marketplace.md
   - Releases:
+      - v0.3.0: releases/v0.3.0.md
       - v0.2.0: releases/v0.2.0.md
       - v0.1.0: releases/v0.1.0.md
 
