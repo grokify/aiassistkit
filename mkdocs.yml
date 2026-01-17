@@ -1,0 +1,66 @@
+site_name: AI Assist Kit
+site_description: Go library for building plugins for AI coding assistants
+site_url: https://grokify.github.io/aiassistkit/
+repo_url: https://github.com/grokify/aiassistkit
+repo_name: grokify/aiassistkit
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+  - Plugins:
+      - Plugin Structure: plugins/structure.md
+      - Commands: plugins/commands.md
+      - Skills: plugins/skills.md
+      - Agents: plugins/agents.md
+  - AI Assistants:
+      - Claude Code: assistants/claude.md
+      - Gemini CLI: assistants/gemini.md
+      - OpenAI Codex: assistants/codex.md
+      - AWS Kiro: assistants/kiro.md
+  - MCP Servers:
+      - Configuration: mcp/configuration.md
+  - Publishing:
+      - Overview: publishing/overview.md
+      - Claude Marketplace: publishing/claude-marketplace.md
+      - Gemini Marketplace: publishing/gemini-marketplace.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/grokify/aiassistkit
