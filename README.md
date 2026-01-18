@@ -1,4 +1,4 @@
-# Assistant Kit
+# AssistantKit
 
 [![Build Status][build-status-svg]][build-status-url]
 [![Lint Status][lint-status-svg]][lint-status-url]
@@ -6,7 +6,7 @@
 [![Docs][docs-godoc-svg]][docs-godoc-url]
 [![License][license-svg]][license-url]
 
-Assistant Kit is a Go library for managing configuration files across multiple AI coding assistants. It provides a unified interface for reading, writing, and converting between different tool-specific formats.
+AssistantKit is a Go library for managing configuration files across multiple AI coding assistants. It provides a unified interface for reading, writing, and converting between different tool-specific formats.
 
 ## Supported Tools
 
@@ -408,9 +408,9 @@ aiassistkit/
 
 ## Related Projects
 
-Assistant Kit is part of the AgentPlexus family of Go modules for building AI agents:
+AssistantKit is part of the AgentPlexus family of Go modules for building AI agents:
 
-- **Assistant Kit** - AI coding assistant configuration management
+- **AssistantKit** - AI coding assistant configuration management
 - **OmniVault** - Unified secrets management
 - **OmniLLM** - Multi-provider LLM abstraction
 - **OmniSerp** - Search engine abstraction
