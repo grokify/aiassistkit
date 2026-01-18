@@ -61,8 +61,8 @@ import (
     "log"
     "os"
 
-    "github.com/agentplexus/aiassistkit/publish/claude"
-    "github.com/agentplexus/aiassistkit/publish/core"
+    "github.com/agentplexus/assistantkit/publish/claude"
+    "github.com/agentplexus/assistantkit/publish/core"
 )
 
 func main() {
@@ -127,7 +127,7 @@ Adding the **my-plugin** plugin to the Claude Code marketplace.
 
 ---
 
-*Submitted via [aiassistkit](https://github.com/agentplexus/aiassistkit) publish tool*
+*Submitted via [aiassistkit](https://github.com/agentplexus/assistantkit) publish tool*
 ```
 
 ## Validation

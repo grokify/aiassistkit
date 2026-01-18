@@ -22,7 +22,7 @@ type Skill struct {
 package main
 
 import (
-    "github.com/agentplexus/aiassistkit/skills/core"
+    "github.com/agentplexus/assistantkit/skills/core"
 )
 
 func main() {

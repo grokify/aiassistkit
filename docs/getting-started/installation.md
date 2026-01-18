@@ -12,7 +12,7 @@
 ## Install the Library
 
 ```bash
-go get github.com/agentplexus/aiassistkit
+go get github.com/agentplexus/assistantkit
 ```
 
 ## Verify Installation
@@ -22,7 +22,7 @@ package main
 
 import (
     "fmt"
-    "github.com/agentplexus/aiassistkit/plugins/core"
+    "github.com/agentplexus/assistantkit/plugins/core"
 )
 
 func main() {

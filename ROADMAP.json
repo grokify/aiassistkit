@@ -1,7 +1,7 @@
 {
   "ir_version": "1.0",
   "project": "AI Assist Kit",
-  "repository": "https://github.com/agentplexus/aiassistkit",
+  "repository": "https://github.com/agentplexus/assistantkit",
 
   "legend": {
     "completed": {"emoji": "✅", "description": "Completed"},

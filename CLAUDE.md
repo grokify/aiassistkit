@@ -96,7 +96,7 @@ go test ./... -v
 
 ### Module Path
 
-The go.mod uses github.com/agentplexus/aiassistkit as the module path
+The go.mod uses github.com/agentplexus/assistantkit as the module path
 
 ### MCP Test Coverage Gap
 

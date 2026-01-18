@@ -40,8 +40,8 @@ AI Assist Kit provides Go code to automate marketplace submissions:
 ```go
 import (
     "context"
-    "github.com/agentplexus/aiassistkit/publish/claude"
-    "github.com/agentplexus/aiassistkit/publish/core"
+    "github.com/agentplexus/assistantkit/publish/claude"
+    "github.com/agentplexus/assistantkit/publish/core"
 )
 
 func main() {

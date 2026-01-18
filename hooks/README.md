@@ -1,6 +1,6 @@
 # OmniConfig Hooks
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/agentplexus/aiassistkit/hooks.svg)](https://pkg.go.dev/github.com/agentplexus/aiassistkit/hooks)
+[![Go Reference](https://pkg.go.dev/badge/github.com/agentplexus/assistantkit/hooks.svg)](https://pkg.go.dev/github.com/agentplexus/assistantkit/hooks)
 
 The `hooks` package provides a unified interface for managing automation/lifecycle hooks across multiple AI coding assistants.
 
@@ -22,7 +22,7 @@ Hooks are callbacks that execute at defined stages of the AI agent loop. They ca
 ## Installation
 
 ```bash
-go get github.com/agentplexus/aiassistkit/hooks
+go get github.com/agentplexus/assistantkit/hooks
 ```
 
 ## Quick Start
@@ -33,8 +33,8 @@ go get github.com/agentplexus/aiassistkit/hooks
 package main
 
 import (
-    "github.com/agentplexus/aiassistkit/hooks"
-    "github.com/agentplexus/aiassistkit/hooks/claude"
+    "github.com/agentplexus/assistantkit/hooks"
+    "github.com/agentplexus/assistantkit/hooks/claude"
 )
 
 func main() {
@@ -62,7 +62,7 @@ package main
 
 import (
     "fmt"
-    "github.com/agentplexus/aiassistkit/hooks/cursor"
+    "github.com/agentplexus/assistantkit/hooks/cursor"
 )
 
 func main() {
@@ -89,7 +89,7 @@ package main
 
 import (
     "os"
-    "github.com/agentplexus/aiassistkit/hooks"
+    "github.com/agentplexus/assistantkit/hooks"
 )
 
 func main() {
@@ -340,7 +340,7 @@ cfg.AddHook(hooks.BeforePrompt,
 
 ## API Reference
 
-See the [Go documentation](https://pkg.go.dev/github.com/agentplexus/aiassistkit/hooks) for complete API reference.
+See the [Go documentation](https://pkg.go.dev/github.com/agentplexus/assistantkit/hooks) for complete API reference.
 
 ## Testing
 
@@ -367,7 +367,7 @@ go test -cover ./hooks/...
 
 ## Related
 
-- [OmniConfig](https://github.com/agentplexus/aiassistkit) - Parent project
+- [OmniConfig](https://github.com/agentplexus/assistantkit) - Parent project
 - [OmniConfig MCP](../mcp/) - MCP server configuration
 - [Claude Code Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks)
 - [Cursor Hooks](https://docs.cursor.com/advanced/hooks)

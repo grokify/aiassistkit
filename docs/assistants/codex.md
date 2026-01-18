@@ -73,8 +73,8 @@ Codex CLI supports MCP servers in configuration:
 
 ```go
 import (
-    "github.com/agentplexus/aiassistkit/commands/core"
-    "github.com/agentplexus/aiassistkit/commands/codex"
+    "github.com/agentplexus/assistantkit/commands/core"
+    "github.com/agentplexus/assistantkit/commands/codex"
 )
 
 canonical := core.Command{

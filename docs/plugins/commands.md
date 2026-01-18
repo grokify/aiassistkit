@@ -22,7 +22,7 @@ type Command struct {
 package main
 
 import (
-    "github.com/agentplexus/aiassistkit/commands/core"
+    "github.com/agentplexus/assistantkit/commands/core"
 )
 
 func main() {

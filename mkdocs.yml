@@ -1,8 +1,8 @@
-site_name: AI Assist Kit
+site_name: Assistant Kit
 site_description: Go library for building plugins for AI coding assistants
-site_url: https://agentplexus.github.io/aiassistkit/
-repo_url: https://github.com/agentplexus/aiassistkit
-repo_name: agentplexus/aiassistkit
+site_url: https://agentplexus.github.io/assistantkit/
+repo_url: https://github.com/agentplexus/assistantkit
+repo_name: agentplexus/assistantkit
 
 theme:
   name: material
@@ -60,6 +60,7 @@ nav:
       - Claude Marketplace: publishing/claude-marketplace.md
       - Gemini Marketplace: publishing/gemini-marketplace.md
   - Releases:
+      - v0.5.0: releases/v0.5.0.md
       - v0.4.0: releases/v0.4.0.md
       - v0.3.0: releases/v0.3.0.md
       - v0.2.0: releases/v0.2.0.md
@@ -68,4 +69,4 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/agentplexus/aiassistkit
+      link: https://github.com/agentplexus/assistantkit

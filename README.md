@@ -1,4 +1,4 @@
-# AI Assist Kit
+# Assistant Kit
 
 [![Build Status][build-status-svg]][build-status-url]
 [![Lint Status][lint-status-svg]][lint-status-url]
@@ -6,7 +6,7 @@
 [![Docs][docs-godoc-svg]][docs-godoc-url]
 [![License][license-svg]][license-url]
 
-AI Assist Kit is a Go library for managing configuration files across multiple AI coding assistants. It provides a unified interface for reading, writing, and converting between different tool-specific formats.
+Assistant Kit is a Go library for managing configuration files across multiple AI coding assistants. It provides a unified interface for reading, writing, and converting between different tool-specific formats.
 
 ## Supported Tools
 
@@ -42,7 +42,7 @@ AI Assist Kit is a Go library for managing configuration files across multiple A
 ## Installation
 
 ```bash
-go get github.com/agentplexus/aiassistkit
+go get github.com/agentplexus/assistantkit
 ```
 
 ## MCP Configuration
@@ -57,8 +57,8 @@ package main
 import (
     "log"
 
-    "github.com/agentplexus/aiassistkit/mcp/claude"
-    "github.com/agentplexus/aiassistkit/mcp/vscode"
+    "github.com/agentplexus/assistantkit/mcp/claude"
+    "github.com/agentplexus/assistantkit/mcp/vscode"
 )
 
 func main() {
@@ -81,9 +81,9 @@ func main() {
 package main
 
 import (
-    "github.com/agentplexus/aiassistkit/mcp"
-    "github.com/agentplexus/aiassistkit/mcp/claude"
-    "github.com/agentplexus/aiassistkit/mcp/core"
+    "github.com/agentplexus/assistantkit/mcp"
+    "github.com/agentplexus/assistantkit/mcp/claude"
+    "github.com/agentplexus/assistantkit/mcp/core"
 )
 
 func main() {
@@ -122,7 +122,7 @@ import (
     "log"
     "os"
 
-    "github.com/agentplexus/aiassistkit/mcp"
+    "github.com/agentplexus/assistantkit/mcp"
 )
 
 func main() {
@@ -147,7 +147,7 @@ package main
 import (
     "log"
 
-    "github.com/agentplexus/aiassistkit/mcp"
+    "github.com/agentplexus/assistantkit/mcp"
 )
 
 func main() {
@@ -276,8 +276,8 @@ The `hooks` subpackage provides adapters for automation/lifecycle hooks that exe
 package main
 
 import (
-    "github.com/agentplexus/aiassistkit/hooks"
-    "github.com/agentplexus/aiassistkit/hooks/claude"
+    "github.com/agentplexus/assistantkit/hooks"
+    "github.com/agentplexus/assistantkit/hooks/claude"
 )
 
 func main() {
@@ -305,7 +305,7 @@ import (
     "log"
     "os"
 
-    "github.com/agentplexus/aiassistkit/hooks"
+    "github.com/agentplexus/assistantkit/hooks"
 )
 
 func main() {
@@ -408,9 +408,9 @@ aiassistkit/
 
 ## Related Projects
 
-AI Assist Kit is part of the AgentPlexus family of Go modules for building AI agents:
+Assistant Kit is part of the AgentPlexus family of Go modules for building AI agents:
 
-- **AI Assist Kit** - AI coding assistant configuration management
+- **Assistant Kit** - AI coding assistant configuration management
 - **OmniVault** - Unified secrets management
 - **OmniLLM** - Multi-provider LLM abstraction
 - **OmniSerp** - Search engine abstraction
@@ -420,15 +420,15 @@ AI Assist Kit is part of the AgentPlexus family of Go modules for building AI ag
 
 MIT License - see [LICENSE](LICENSE) for details.
 
- [build-status-svg]: https://github.com/agentplexus/aiassistkit/actions/workflows/ci.yaml/badge.svg?branch=main
- [build-status-url]: https://github.com/agentplexus/aiassistkit/actions/workflows/ci.yaml
- [lint-status-svg]: https://github.com/agentplexus/aiassistkit/actions/workflows/lint.yaml/badge.svg?branch=main
- [lint-status-url]: https://github.com/agentplexus/aiassistkit/actions/workflows/lint.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/agentplexus/aiassistkit
- [goreport-url]: https://goreportcard.com/report/github.com/agentplexus/aiassistkit
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/agentplexus/aiassistkit
- [docs-godoc-url]: https://pkg.go.dev/github.com/agentplexus/aiassistkit
+ [build-status-svg]: https://github.com/agentplexus/assistantkit/actions/workflows/ci.yaml/badge.svg?branch=main
+ [build-status-url]: https://github.com/agentplexus/assistantkit/actions/workflows/ci.yaml
+ [lint-status-svg]: https://github.com/agentplexus/assistantkit/actions/workflows/lint.yaml/badge.svg?branch=main
+ [lint-status-url]: https://github.com/agentplexus/assistantkit/actions/workflows/lint.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/agentplexus/assistantkit
+ [goreport-url]: https://goreportcard.com/report/github.com/agentplexus/assistantkit
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/agentplexus/assistantkit
+ [docs-godoc-url]: https://pkg.go.dev/github.com/agentplexus/assistantkit
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/agentplexus/aiassistkit/blob/master/LICENSE
- [used-by-svg]: https://sourcegraph.com/github.com/agentplexus/aiassistkit/-/badge.svg
- [used-by-url]: https://sourcegraph.com/github.com/agentplexus/aiassistkit?badge
+ [license-url]: https://github.com/agentplexus/assistantkit/blob/master/LICENSE
+ [used-by-svg]: https://sourcegraph.com/github.com/agentplexus/assistantkit/-/badge.svg
+ [used-by-url]: https://sourcegraph.com/github.com/agentplexus/assistantkit?badge
