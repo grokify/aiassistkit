@@ -43,6 +43,8 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quickstart.md
+  - CLI:
+      - Generate Plugins: cli/generate-plugins.md
   - Plugins:
       - Plugin Structure: plugins/structure.md
       - Commands: plugins/commands.md

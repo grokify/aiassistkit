@@ -15,6 +15,16 @@
 go get github.com/agentplexus/assistantkit
 ```
 
+## Install the CLI Tool (Optional)
+
+To use the CLI tool for generating plugins from canonical specs:
+
+```bash
+go install github.com/agentplexus/assistantkit/cmd/assistantkit@latest
+```
+
+See [Generate Plugins](../cli/generate-plugins.md) for CLI usage.
+
 ## Verify Installation
 
 ```go

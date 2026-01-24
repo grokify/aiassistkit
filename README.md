@@ -46,6 +46,72 @@ AssistantKit is a Go library for managing configuration files across multiple AI
 go get github.com/agentplexus/assistantkit
 ```
 
+### CLI Tool
+
+To use the CLI tool for generating plugins:
+
+```bash
+go install github.com/agentplexus/assistantkit/cmd/assistantkit@latest
+```
+
+## CLI
+
+AssistantKit provides a CLI tool for generating platform-specific plugins from canonical JSON specifications.
+
+### Generate Plugins
+
+Generate plugins for multiple platforms from a canonical spec:
+
+```bash
+assistantkit generate plugins
+```
+
+This reads from `plugins/spec/` and generates platform-specific plugins in `plugins/`.
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--spec` | `plugins/spec` | Path to canonical spec directory |
+| `--output` | `plugins` | Output directory for generated plugins |
+| `--platforms` | `claude,kiro` | Platforms to generate (claude, kiro, gemini) |
+
+#### Example
+
+```bash
+# Generate for all default platforms
+assistantkit generate plugins
+
+# Generate only for Claude
+assistantkit generate plugins --platforms=claude
+
+# Use custom directories
+assistantkit generate plugins --spec=canonical --output=dist
+```
+
+### Spec Directory Structure
+
+The canonical spec directory should contain:
+
+```
+plugins/spec/
+├── plugin.json       # Plugin metadata (name, version, keywords, mcpServers)
+├── commands/         # Command definitions (*.json)
+│   └── create.json
+├── skills/           # Skill definitions (*.json)
+│   └── review.json
+└── agents/           # Agent definitions (*.json)
+    └── release.json
+```
+
+### Generated Output
+
+The generator produces platform-specific plugins:
+
+- **claude/**: Claude Code plugin (`.claude-plugin/`, commands/, skills/)
+- **kiro/**: Kiro IDE Power (POWER.md + mcp.json) or Kiro Agents (agents/*.json)
+- **gemini/**: Gemini CLI extension (gemini-extension.json, agents/)
+
 ## MCP Configuration
 
 The `mcp` subpackage provides adapters for MCP server configurations.
@@ -366,7 +432,10 @@ assistantkit/
 │   ├── gemini/             # Gemini adapter
 │   └── kiro/               # AWS Kiro CLI adapter
 ├── cmd/
+│   ├── assistantkit/       # CLI tool for plugin generation
 │   └── genagents/          # Multi-platform agent generator CLI
+├── generate/               # Plugin generation library
+│   └── generate.go         # Core generation logic
 ├── commands/               # Slash command definitions
 │   ├── claude/             # Claude adapter
 │   ├── codex/              # Codex adapter
