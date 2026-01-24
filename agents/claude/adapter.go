@@ -40,7 +40,7 @@ func (a *Adapter) Parse(data []byte) (*core.Agent, error) {
 	agent := &core.Agent{
 		Name:         frontmatter["name"],
 		Description:  frontmatter["description"],
-		Model:        frontmatter["model"],
+		Model:        core.Model(frontmatter["model"]),
 		Instructions: strings.TrimSpace(body),
 	}
 

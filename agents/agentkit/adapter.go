@@ -142,12 +142,12 @@ func mapToolToAgentKit(tool string) string {
 	return multiagentspec.MapToolToAgentKit(multiagentspec.Tool(tool))
 }
 
-// mapModelToAgentKit converts a canonical model string to AgentKit model string.
-func mapModelToAgentKit(model string) string {
-	if mapped, ok := agentKitModelMapping[model]; ok {
+// mapModelToAgentKit converts a canonical model to AgentKit model string.
+func mapModelToAgentKit(model core.Model) string {
+	if mapped, ok := agentKitModelMapping[string(model)]; ok {
 		return mapped
 	}
-	return model
+	return string(model)
 }
 
 func agentToConfig(agent *core.Agent) *AgentConfig {
@@ -195,7 +195,7 @@ func configToAgent(cfg *AgentConfig) *core.Agent {
 		Name:         cfg.Name,
 		Description:  cfg.Description,
 		Instructions: cfg.Instructions,
-		Model:        cfg.Model,
+		Model:        core.Model(cfg.Model),
 	}
 
 	// Reverse map tools

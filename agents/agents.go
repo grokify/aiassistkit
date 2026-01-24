@@ -46,6 +46,14 @@ import (
 type (
 	Agent   = core.Agent
 	Adapter = core.Adapter
+	Model   = core.Model
+)
+
+// Re-export model constants
+const (
+	ModelHaiku  = core.ModelHaiku
+	ModelSonnet = core.ModelSonnet
+	ModelOpus   = core.ModelOpus
 )
 
 // Re-export core functions

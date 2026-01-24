@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	multiagentspec "github.com/agentplexus/multi-agent-spec/sdk/go"
 )
 
 // DefaultFileMode is the default permission for generated files.
@@ -108,10 +110,19 @@ func ReadCanonicalFile(path string) (*Agent, error) {
 		return nil, &ReadError{Path: path, Err: err}
 	}
 
-	// Detect format: if it starts with "---" or has .md extension, use Markdown parser
+	// Detect format: if it starts with "---" or has .md extension, use multi-agent-spec loader
 	ext := filepath.Ext(path)
 	if ext == ".md" || (len(data) >= 3 && string(data[:3]) == "---") {
-		return ParseMarkdownAgent(data, path)
+		agent, err := multiagentspec.ParseAgentMarkdown(data)
+		if err != nil {
+			return nil, &ParseError{Format: "markdown", Path: path, Err: err}
+		}
+		// Infer name from filename if not set
+		if agent.Name == "" {
+			base := filepath.Base(path)
+			agent.Name = strings.TrimSuffix(base, filepath.Ext(base))
+		}
+		return agent, nil
 	}
 
 	// Fall back to JSON for .json files or other formats
@@ -159,21 +170,28 @@ func WriteCanonicalJSON(agent *Agent, path string) error {
 }
 
 // ReadCanonicalDir reads all agent files (.md or .json) from a directory.
+// This delegates to multiagentspec.LoadAgentsFromDir for markdown files.
 func ReadCanonicalDir(dir string) ([]*Agent, error) {
+	// Try multiagentspec loader first (handles .md files properly)
+	agents, err := multiagentspec.LoadAgentsFromDir(dir)
+	if err != nil {
+		return nil, &ReadError{Path: dir, Err: err}
+	}
+
+	// Also load any .json files that multiagentspec loader skips
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, &ReadError{Path: dir, Err: err}
 	}
 
-	var agents []*Agent
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
 
 		ext := filepath.Ext(entry.Name())
-		if ext != ".md" && ext != ".json" {
-			continue
+		if ext != ".json" {
+			continue // .md files already loaded by multiagentspec
 		}
 
 		path := filepath.Join(dir, entry.Name())
@@ -188,29 +206,11 @@ func ReadCanonicalDir(dir string) ([]*Agent, error) {
 }
 
 // ParseMarkdownAgent parses a Markdown file with YAML frontmatter into an Agent.
+// Deprecated: Use multiagentspec.ParseAgentMarkdown directly.
 func ParseMarkdownAgent(data []byte, path string) (*Agent, error) {
-	frontmatter, body := parseFrontmatter(data)
-
-	agent := &Agent{
-		Name:         frontmatter["name"],
-		Description:  frontmatter["description"],
-		Model:        frontmatter["model"],
-		Instructions: strings.TrimSpace(body),
-	}
-
-	// Parse tools if present
-	if tools, ok := frontmatter["tools"]; ok {
-		agent.Tools = parseList(tools)
-	}
-
-	// Parse skills if present
-	if skills, ok := frontmatter["skills"]; ok {
-		agent.Skills = parseList(skills)
-	}
-
-	// Parse dependencies if present
-	if deps, ok := frontmatter["dependencies"]; ok {
-		agent.Dependencies = parseList(deps)
+	agent, err := multiagentspec.ParseAgentMarkdown(data)
+	if err != nil {
+		return nil, err
 	}
 
 	// Infer name from filename if not set
@@ -232,7 +232,7 @@ func MarshalMarkdownAgent(agent *Agent) []byte {
 	buf.WriteString(fmt.Sprintf("description: %s\n", agent.Description))
 
 	if agent.Model != "" {
-		buf.WriteString(fmt.Sprintf("model: %s\n", agent.Model))
+		buf.WriteString(fmt.Sprintf("model: %s\n", string(agent.Model)))
 	}
 
 	if len(agent.Tools) > 0 {
@@ -247,6 +247,10 @@ func MarshalMarkdownAgent(agent *Agent) []byte {
 		buf.WriteString(fmt.Sprintf("dependencies: [%s]\n", strings.Join(agent.Dependencies, ", ")))
 	}
 
+	if len(agent.Requires) > 0 {
+		buf.WriteString(fmt.Sprintf("requires: [%s]\n", strings.Join(agent.Requires, ", ")))
+	}
+
 	buf.WriteString("---\n\n")
 
 	// Write instructions directly (they already contain markdown formatting)
@@ -256,60 +260,6 @@ func MarshalMarkdownAgent(agent *Agent) []byte {
 	}
 
 	return buf.Bytes()
-}
-
-// parseFrontmatter extracts YAML frontmatter and body from Markdown.
-func parseFrontmatter(data []byte) (map[string]string, string) {
-	content := string(data)
-	frontmatter := make(map[string]string)
-
-	if !strings.HasPrefix(content, "---") {
-		return frontmatter, content
-	}
-
-	parts := strings.SplitN(content, "---", 3)
-	if len(parts) < 3 {
-		return frontmatter, content
-	}
-
-	// Parse simple YAML key: value pairs
-	lines := strings.Split(strings.TrimSpace(parts[1]), "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-		idx := strings.Index(line, ":")
-		if idx > 0 {
-			key := strings.TrimSpace(line[:idx])
-			value := strings.TrimSpace(line[idx+1:])
-			// Remove quotes if present
-			value = strings.Trim(value, "\"'")
-			frontmatter[key] = value
-		}
-	}
-
-	return frontmatter, strings.TrimSpace(parts[2])
-}
-
-// parseList parses a list in either YAML array format [a, b, c] or comma-separated format.
-func parseList(s string) []string {
-	s = strings.TrimSpace(s)
-
-	// Handle YAML array syntax: [a, b, c]
-	if strings.HasPrefix(s, "[") && strings.HasSuffix(s, "]") {
-		s = s[1 : len(s)-1]
-	}
-
-	parts := strings.Split(s, ",")
-	var result []string
-	for _, p := range parts {
-		p = strings.TrimSpace(p)
-		if p != "" {
-			result = append(result, p)
-		}
-	}
-	return result
 }
 
 // WriteAgentsToDir writes multiple agents to a directory using the specified adapter.

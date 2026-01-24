@@ -119,8 +119,10 @@ func (a *Adapter) ToCore(kiroCfg *AgentConfig) *core.Agent {
 		agent.Tools = mapKiroToolsToCanonical(kiroCfg.Tools)
 	}
 
-	// Store allowed tools in metadata (Kiro-specific)
-	// Note: AllowedTools is a Kiro-specific concept for auto-approval
+	// Map Kiro allowed tools to canonical allowed tools
+	if len(kiroCfg.AllowedTools) > 0 {
+		agent.AllowedTools = mapKiroToolsToCanonical(kiroCfg.AllowedTools)
+	}
 
 	// Store resources as skills (closest mapping)
 	// Note: Resources in Kiro load context files, similar to skill dependencies
@@ -146,6 +148,11 @@ func (a *Adapter) FromCore(agent *core.Agent) *AgentConfig {
 		kiroCfg.Tools = mapCanonicalToolsToKiro(agent.Tools)
 	}
 
+	// Map canonical allowed tools to Kiro allowed tools
+	if len(agent.AllowedTools) > 0 {
+		kiroCfg.AllowedTools = mapCanonicalToolsToKiro(agent.AllowedTools)
+	}
+
 	// Map skills to resources (steering files)
 	if len(agent.Skills) > 0 {
 		kiroCfg.Resources = mapSkillsToResources(agent.Skills)
@@ -155,44 +162,56 @@ func (a *Adapter) FromCore(agent *core.Agent) *AgentConfig {
 }
 
 // mapKiroModelToCanonical maps Kiro model names to canonical names.
-func mapKiroModelToCanonical(kiroModel string) string {
+func mapKiroModelToCanonical(kiroModel string) core.Model {
 	switch kiroModel {
 	case "claude-sonnet-4", "claude-4-sonnet":
-		return "sonnet"
+		return core.ModelSonnet
 	case "claude-opus-4", "claude-4-opus":
-		return "opus"
+		return core.ModelOpus
 	case "claude-haiku", "claude-3-haiku":
-		return "haiku"
+		return core.ModelHaiku
 	default:
-		// Return as-is if not recognized
-		return kiroModel
+		// Return as Model type
+		return core.Model(kiroModel)
 	}
 }
 
 // mapCanonicalModelToKiro maps canonical model names to Kiro names.
-func mapCanonicalModelToKiro(model string) string {
-	switch strings.ToLower(model) {
-	case "sonnet":
+func mapCanonicalModelToKiro(model core.Model) string {
+	switch model {
+	case core.ModelSonnet:
 		return "claude-sonnet-4"
-	case "opus":
+	case core.ModelOpus:
 		return "claude-opus-4"
-	case "haiku":
+	case core.ModelHaiku:
 		return "claude-haiku"
 	default:
-		return model
+		return string(model)
 	}
 }
 
 // mapKiroToolsToCanonical maps Kiro tool names to canonical names.
 func mapKiroToolsToCanonical(kiroTools []string) []string {
 	toolMap := map[string]string{
-		"read":       "Read",
-		"write":      "Write",
-		"shell":      "Bash",
-		"web_search": "WebSearch",
-		"web_fetch":  "WebFetch",
-		"grep":       "Grep",
-		"glob":       "Glob",
+		// Core tools
+		"execute_bash": "Bash",
+		"fs_read":      "Read",
+		"fs_write":     "Write",
+		"grep":         "Grep",
+		"glob":         "Glob",
+		"web_search":   "WebSearch",
+		"web_fetch":    "WebFetch",
+		// Advanced tools
+		"code":         "Code",
+		"use_aws":      "AWS",
+		"use_subagent": "Task",
+		"introspect":   "Introspect",
+		"report_issue": "ReportIssue",
+		// Experimental tools
+		"knowledge": "Knowledge",
+		"thinking":  "Thinking",
+		"todo_list": "TodoList",
+		"delegate":  "Delegate",
 	}
 
 	var canonical []string
@@ -212,23 +231,42 @@ func mapKiroToolsToCanonical(kiroTools []string) []string {
 // mapCanonicalToolsToKiro maps canonical tool names to Kiro names.
 func mapCanonicalToolsToKiro(tools []string) []string {
 	toolMap := map[string]string{
-		"Read":      "read",
-		"Write":     "write",
-		"Bash":      "shell",
-		"WebSearch": "web_search",
-		"WebFetch":  "web_fetch",
+		// Core tools
+		"Bash":      "execute_bash",
+		"Read":      "fs_read",
+		"Write":     "fs_write",
+		"Edit":      "fs_write", // Edit maps to fs_write in Kiro
 		"Grep":      "grep",
 		"Glob":      "glob",
-		"Edit":      "write", // Edit maps to write in Kiro
+		"WebSearch": "web_search",
+		"WebFetch":  "web_fetch",
+		// Advanced tools
+		"Code":        "code",
+		"AWS":         "use_aws",
+		"Task":        "use_subagent",
+		"Introspect":  "introspect",
+		"ReportIssue": "report_issue",
+		// Experimental tools
+		"Knowledge": "knowledge",
+		"Thinking":  "thinking",
+		"TodoList":  "todo_list",
+		"Delegate":  "delegate",
 	}
 
+	seen := make(map[string]bool)
 	var kiroTools []string
 	for _, tool := range tools {
+		var kiroTool string
 		if mapped, ok := toolMap[tool]; ok {
-			kiroTools = append(kiroTools, mapped)
+			kiroTool = mapped
 		} else {
-			// Lowercase for unknown tools
-			kiroTools = append(kiroTools, strings.ToLower(tool))
+			// Lowercase with underscore for unknown tools
+			kiroTool = strings.ToLower(tool)
+		}
+		// Deduplicate (e.g., Write and Edit both map to fs_write)
+		if !seen[kiroTool] {
+			seen[kiroTool] = true
+			kiroTools = append(kiroTools, kiroTool)
 		}
 	}
 	return kiroTools

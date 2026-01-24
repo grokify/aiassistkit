@@ -162,10 +162,10 @@ func escapeString(s string) string {
 	return s
 }
 
-func getFoundationModel(model string) string {
+func getFoundationModel(model core.Model) string {
 	// Use multi-agent-spec mapping for Bedrock models
-	mapped := multiagentspec.MapModelToBedrock(multiagentspec.Model(model))
-	if mapped == model {
+	mapped := multiagentspec.MapModelToBedrock(model)
+	if mapped == string(model) {
 		// Fallback to sonnet if unknown model
 		return multiagentspec.MapModelToBedrock(multiagentspec.ModelSonnet)
 	}

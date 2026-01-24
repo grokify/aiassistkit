@@ -134,29 +134,29 @@ func (a *Adapter) WriteFile(agent *core.Agent, path string) error {
 }
 
 // mapGeminiModelToCanonical maps Gemini model names to canonical names.
-func mapGeminiModelToCanonical(geminiModel string) string {
+func mapGeminiModelToCanonical(geminiModel string) core.Model {
 	switch strings.ToLower(geminiModel) {
 	case "gemini-2.0-flash", "flash":
-		return "haiku"
+		return core.ModelHaiku
 	case "gemini-2.0-pro", "pro":
-		return "sonnet"
+		return core.ModelSonnet
 	case "gemini-2.0-ultra", "ultra":
-		return "opus"
+		return core.ModelOpus
 	default:
-		return geminiModel
+		return core.Model(geminiModel)
 	}
 }
 
 // mapCanonicalModelToGemini maps canonical model names to Gemini names.
-func mapCanonicalModelToGemini(model string) string {
-	switch strings.ToLower(model) {
-	case "haiku":
+func mapCanonicalModelToGemini(model core.Model) string {
+	switch model {
+	case core.ModelHaiku:
 		return "gemini-2.0-flash"
-	case "sonnet":
+	case core.ModelSonnet:
 		return "gemini-2.0-pro"
-	case "opus":
+	case core.ModelOpus:
 		return "gemini-2.0-ultra"
 	default:
-		return model
+		return string(model)
 	}
 }

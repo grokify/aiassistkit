@@ -196,29 +196,29 @@ func parseList(s string) []string {
 }
 
 // mapCodexModelToCanonical maps Codex model names to canonical names.
-func mapCodexModelToCanonical(codexModel string) string {
+func mapCodexModelToCanonical(codexModel string) core.Model {
 	switch strings.ToLower(codexModel) {
 	case "gpt-4o-mini", "gpt-4-mini":
-		return "haiku"
+		return core.ModelHaiku
 	case "gpt-4o", "gpt-4":
-		return "sonnet"
+		return core.ModelSonnet
 	case "o1", "o1-preview":
-		return "opus"
+		return core.ModelOpus
 	default:
-		return codexModel
+		return core.Model(codexModel)
 	}
 }
 
 // mapCanonicalModelToCodex maps canonical model names to Codex/OpenAI names.
-func mapCanonicalModelToCodex(model string) string {
-	switch strings.ToLower(model) {
-	case "haiku":
+func mapCanonicalModelToCodex(model core.Model) string {
+	switch model {
+	case core.ModelHaiku:
 		return "gpt-4o-mini"
-	case "sonnet":
+	case core.ModelSonnet:
 		return "gpt-4o"
-	case "opus":
+	case core.ModelOpus:
 		return "o1"
 	default:
-		return model
+		return string(model)
 	}
 }
