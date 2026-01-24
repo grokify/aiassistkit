@@ -6,4 +6,5 @@ coverage.txt
 debug.test
 main
 main.zip
-genagents
+/genagents
+/assistantkit

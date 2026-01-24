@@ -27,6 +27,11 @@ linters:
     staticcheck:
       checks:
         - "-QF1008" # Disable the "could remove embedded field" check
+    gosec:
+      excludes:
+        - G306 # WriteFile with 0644 is appropriate for config files
+    dupl:
+      threshold: 200 # Allow more similarity for type-specific loaders
 formatters:
   enable:
     - gofmt
