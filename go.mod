@@ -3,7 +3,7 @@ module github.com/agentplexus/assistantkit
 go 1.24.0
 
 require (
-	github.com/agentplexus/multi-agent-spec/sdk/go v0.4.0
+	github.com/agentplexus/multi-agent-spec/sdk/go v0.5.0
 	github.com/google/go-github/v81 v81.0.0
 	github.com/grokify/gogithub v0.6.0
 	github.com/pelletier/go-toml/v2 v2.2.4
@@ -12,8 +12,13 @@ require (
 )
 
 require (
+	github.com/bahlo/generic-list-go v0.2.0 // indirect
+	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/invopop/jsonschema v0.13.0 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
+	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	golang.org/x/oauth2 v0.34.0 // indirect
 )
