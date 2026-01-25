@@ -41,16 +41,16 @@ type InstallMethod struct {
 
 // MissingRequirement represents a tool that is not installed.
 type MissingRequirement struct {
-	Requirement       Requirement
-	AvailableMethods  []InstallMethod // Methods that can be used (prerequisites met)
-	SuggestedMethod   *InstallMethod  // First available method (recommended)
+	Requirement      Requirement
+	AvailableMethods []InstallMethod // Methods that can be used (prerequisites met)
+	SuggestedMethod  *InstallMethod  // First available method (recommended)
 }
 
 // CheckResult contains the results of checking requirements.
 type CheckResult struct {
-	Satisfied []string              // Tools that are installed
-	Missing   []MissingRequirement  // Tools that need installation
-	Unknown   []string              // Tools not in registry
+	Satisfied []string             // Tools that are installed
+	Missing   []MissingRequirement // Tools that need installation
+	Unknown   []string             // Tools not in registry
 }
 
 // AllSatisfied returns true if all requirements are met.

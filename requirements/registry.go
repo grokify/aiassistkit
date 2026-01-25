@@ -7,9 +7,9 @@ type Registry map[string]Requirement
 // Projects can extend this with project-specific requirements.
 var DefaultRegistry = Registry{
 	"releasekit": {
-		Name:    "releasekit",
-		Purpose: "language-specific validation (build, test, lint, format)",
-		Check:   "releasekit --version",
+		Name:     "releasekit",
+		Purpose:  "language-specific validation (build, test, lint, format)",
+		Check:    "releasekit --version",
 		Homepage: "https://github.com/grokify/releasekit",
 		InstallMethods: []InstallMethod{
 			{
@@ -20,9 +20,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"schangelog": {
-		Name:    "schangelog",
-		Purpose: "changelog generation and validation",
-		Check:   "schangelog --version",
+		Name:     "schangelog",
+		Purpose:  "changelog generation and validation",
+		Check:    "schangelog --version",
 		Homepage: "https://github.com/grokify/structured-changelog",
 		InstallMethods: []InstallMethod{
 			{
@@ -33,9 +33,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"sroadmap": {
-		Name:    "sroadmap",
-		Purpose: "roadmap generation from structured data",
-		Check:   "sroadmap --version",
+		Name:     "sroadmap",
+		Purpose:  "roadmap generation from structured data",
+		Check:    "sroadmap --version",
 		Homepage: "https://github.com/grokify/structured-roadmap",
 		InstallMethods: []InstallMethod{
 			{
@@ -46,9 +46,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"golangci-lint": {
-		Name:    "golangci-lint",
-		Purpose: "Go linting and static analysis",
-		Check:   "golangci-lint --version",
+		Name:     "golangci-lint",
+		Purpose:  "Go linting and static analysis",
+		Check:    "golangci-lint --version",
 		Homepage: "https://golangci-lint.run",
 		InstallMethods: []InstallMethod{
 			{
@@ -70,9 +70,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"go": {
-		Name:    "go",
-		Purpose: "Go programming language toolchain",
-		Check:   "go version",
+		Name:     "go",
+		Purpose:  "Go programming language toolchain",
+		Check:    "go version",
 		Homepage: "https://go.dev",
 		InstallMethods: []InstallMethod{
 			{
@@ -95,9 +95,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"git": {
-		Name:    "git",
-		Purpose: "version control system",
-		Check:   "git --version",
+		Name:     "git",
+		Purpose:  "version control system",
+		Check:    "git --version",
 		Homepage: "https://git-scm.com",
 		InstallMethods: []InstallMethod{
 			{
@@ -121,9 +121,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"gh": {
-		Name:    "gh",
-		Purpose: "GitHub CLI for PR, issue, and release management",
-		Check:   "gh --version",
+		Name:     "gh",
+		Purpose:  "GitHub CLI for PR, issue, and release management",
+		Check:    "gh --version",
 		Homepage: "https://cli.github.com",
 		InstallMethods: []InstallMethod{
 			{
@@ -146,9 +146,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"helm": {
-		Name:    "helm",
-		Purpose: "Kubernetes package manager",
-		Check:   "helm version",
+		Name:     "helm",
+		Purpose:  "Kubernetes package manager",
+		Check:    "helm version",
 		Homepage: "https://helm.sh",
 		InstallMethods: []InstallMethod{
 			{
@@ -171,9 +171,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"brew": {
-		Name:    "brew",
-		Purpose: "Homebrew package manager",
-		Check:   "brew --version",
+		Name:     "brew",
+		Purpose:  "Homebrew package manager",
+		Check:    "brew --version",
 		Homepage: "https://brew.sh",
 		InstallMethods: []InstallMethod{
 			{
@@ -185,9 +185,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"kubectl": {
-		Name:    "kubectl",
-		Purpose: "Kubernetes command-line tool",
-		Check:   "kubectl version --client",
+		Name:     "kubectl",
+		Purpose:  "Kubernetes command-line tool",
+		Check:    "kubectl version --client",
 		Homepage: "https://kubernetes.io/docs/tasks/tools/",
 		InstallMethods: []InstallMethod{
 			{
@@ -210,9 +210,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"docker": {
-		Name:    "docker",
-		Purpose: "container runtime",
-		Check:   "docker --version",
+		Name:     "docker",
+		Purpose:  "container runtime",
+		Check:    "docker --version",
 		Homepage: "https://www.docker.com",
 		InstallMethods: []InstallMethod{
 			{
@@ -230,9 +230,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"node": {
-		Name:    "node",
-		Purpose: "Node.js JavaScript runtime",
-		Check:   "node --version",
+		Name:     "node",
+		Purpose:  "Node.js JavaScript runtime",
+		Check:    "node --version",
 		Homepage: "https://nodejs.org",
 		InstallMethods: []InstallMethod{
 			{
@@ -255,9 +255,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"npm": {
-		Name:    "npm",
-		Purpose: "Node.js package manager",
-		Check:   "npm --version",
+		Name:     "npm",
+		Purpose:  "Node.js package manager",
+		Check:    "npm --version",
 		Homepage: "https://www.npmjs.com",
 		InstallMethods: []InstallMethod{
 			{
@@ -268,9 +268,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"pnpm": {
-		Name:    "pnpm",
-		Purpose: "fast, disk space efficient package manager",
-		Check:   "pnpm --version",
+		Name:     "pnpm",
+		Purpose:  "fast, disk space efficient package manager",
+		Check:    "pnpm --version",
 		Homepage: "https://pnpm.io",
 		InstallMethods: []InstallMethod{
 			{
@@ -292,9 +292,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"govulncheck": {
-		Name:    "govulncheck",
-		Purpose: "Go vulnerability scanner",
-		Check:   "govulncheck --version",
+		Name:     "govulncheck",
+		Purpose:  "Go vulnerability scanner",
+		Check:    "govulncheck --version",
 		Homepage: "https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck",
 		InstallMethods: []InstallMethod{
 			{
@@ -305,9 +305,9 @@ var DefaultRegistry = Registry{
 		},
 	},
 	"trivy": {
-		Name:    "trivy",
-		Purpose: "vulnerability scanner for containers and filesystems",
-		Check:   "trivy --version",
+		Name:     "trivy",
+		Purpose:  "vulnerability scanner for containers and filesystems",
+		Check:    "trivy --version",
 		Homepage: "https://trivy.dev",
 		InstallMethods: []InstallMethod{
 			{
