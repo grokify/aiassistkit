@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 )
 
@@ -123,13 +124,30 @@ func Convert(data []byte, from, to string) ([]byte, error) {
 	return DefaultRegistry.Convert(data, from, to)
 }
 
-// ReadCanonicalFile reads a canonical command.json file.
+// ReadCanonicalFile reads a canonical command file (JSON or Markdown with YAML frontmatter).
+// The format is auto-detected based on file extension or content.
 func ReadCanonicalFile(path string) (*Command, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, &ReadError{Path: path, Err: err}
 	}
 
+	// Detect format: if it starts with "---" or has .md extension, parse as markdown
+	ext := filepath.Ext(path)
+	if ext == ".md" || (len(data) >= 3 && string(data[:3]) == "---") {
+		cmd, err := ParseCommandMarkdown(data)
+		if err != nil {
+			return nil, &ParseError{Format: "markdown", Path: path, Err: err}
+		}
+		// Infer name from filename if not set
+		if cmd.Name == "" {
+			base := filepath.Base(path)
+			cmd.Name = strings.TrimSuffix(base, filepath.Ext(base))
+		}
+		return cmd, nil
+	}
+
+	// Fall back to JSON
 	var cmd Command
 	if err := json.Unmarshal(data, &cmd); err != nil {
 		return nil, &ParseError{Format: "canonical", Path: path, Err: err}
@@ -157,7 +175,7 @@ func WriteCanonicalFile(cmd *Command, path string) error {
 	return nil
 }
 
-// ReadCanonicalDir reads all command.json files from a directory.
+// ReadCanonicalDir reads all command files (.json or .md) from a directory.
 func ReadCanonicalDir(dir string) ([]*Command, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
@@ -166,7 +184,12 @@ func ReadCanonicalDir(dir string) ([]*Command, error) {
 
 	var commands []*Command
 	for _, entry := range entries {
-		if entry.IsDir() || filepath.Ext(entry.Name()) != ".json" {
+		if entry.IsDir() {
+			continue
+		}
+
+		ext := filepath.Ext(entry.Name())
+		if ext != ".json" && ext != ".md" {
 			continue
 		}
 
@@ -201,4 +224,138 @@ func WriteCommandsToDir(commands []*Command, dir string, adapterName string) err
 	}
 
 	return nil
+}
+
+// ParseCommandMarkdown parses a Markdown file with YAML frontmatter into a Command.
+// The frontmatter should contain: name, description, arguments, dependencies, process.
+// The body becomes the instructions.
+func ParseCommandMarkdown(data []byte) (*Command, error) {
+	content := string(data)
+
+	if !strings.HasPrefix(content, "---") {
+		// No frontmatter, treat entire content as instructions
+		return &Command{Instructions: strings.TrimSpace(content)}, nil
+	}
+
+	parts := strings.SplitN(content, "---", 3)
+	if len(parts) < 3 {
+		return &Command{Instructions: strings.TrimSpace(content)}, nil
+	}
+
+	cmd := &Command{}
+
+	// Parse YAML frontmatter
+	lines := strings.Split(strings.TrimSpace(parts[1]), "\n")
+	var currentKey string
+	var listItems []string
+
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+
+		// Check if this is a list item (starts with -)
+		if strings.HasPrefix(trimmed, "- ") {
+			if currentKey != "" {
+				listItems = append(listItems, strings.TrimPrefix(trimmed, "- "))
+			}
+			continue
+		}
+
+		// Process any accumulated list items
+		if currentKey != "" && len(listItems) > 0 {
+			switch currentKey {
+			case "dependencies":
+				cmd.Dependencies = listItems
+			case "process":
+				cmd.Process = listItems
+			}
+			listItems = nil
+		}
+
+		// Parse key: value
+		idx := strings.Index(trimmed, ":")
+		if idx <= 0 {
+			continue
+		}
+		key := strings.TrimSpace(trimmed[:idx])
+		value := strings.TrimSpace(trimmed[idx+1:])
+		value = strings.Trim(value, "\"'")
+
+		currentKey = key
+
+		switch key {
+		case "name":
+			cmd.Name = value
+		case "description":
+			cmd.Description = value
+		case "dependencies":
+			if value != "" {
+				cmd.Dependencies = parseList(value)
+			}
+			// Otherwise wait for list items
+		case "process":
+			if value != "" {
+				cmd.Process = parseList(value)
+			}
+			// Otherwise wait for list items
+		case "arguments":
+			// Arguments are handled specially - look for inline list or skip
+			if value != "" {
+				// Could be inline like: [version]
+				cmd.Arguments = parseArguments(value)
+			}
+		}
+	}
+
+	// Process any remaining list items
+	if currentKey != "" && len(listItems) > 0 {
+		switch currentKey {
+		case "dependencies":
+			cmd.Dependencies = listItems
+		case "process":
+			cmd.Process = listItems
+		}
+	}
+
+	// Body becomes instructions
+	cmd.Instructions = strings.TrimSpace(parts[2])
+
+	return cmd, nil
+}
+
+// parseList parses a comma-separated or bracket-enclosed list.
+func parseList(s string) []string {
+	s = strings.Trim(s, "[]")
+	parts := strings.Split(s, ",")
+	var result []string
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		p = strings.Trim(p, "\"'")
+		if p != "" {
+			result = append(result, p)
+		}
+	}
+	return result
+}
+
+// parseArguments parses an inline arguments list like [version, target].
+func parseArguments(s string) []Argument {
+	names := parseList(s)
+	var args []Argument
+	for _, name := range names {
+		// Check if required (no ? suffix)
+		required := true
+		if strings.HasSuffix(name, "?") {
+			required = false
+			name = strings.TrimSuffix(name, "?")
+		}
+		args = append(args, Argument{
+			Name:     name,
+			Type:     "string",
+			Required: required,
+		})
+	}
+	return args
 }
