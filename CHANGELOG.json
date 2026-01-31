@@ -7,6 +7,33 @@
   "maintainers": ["agentplexus"],
   "releases": [
     {
+      "version": "v0.9.0",
+      "date": "2026-01-30",
+      "highlights": [
+        { "description": "Unified specs/ directory with deployment-driven plugin generation" },
+        { "description": "Single 'assistantkit generate' command replaces separate subcommands" }
+      ],
+      "added": [
+        { "description": "`Generate()` function for unified deployment-driven plugin generation from specs/", "commit": "b2d8fb1" },
+        { "description": "`generatePlatformPlugin()` helper for per-platform complete plugin generation", "commit": "b2d8fb1" },
+        { "description": "Main `generate` command now runnable with `--specs`, `--target`, `--output` flags", "commit": "679e6dd" }
+      ],
+      "changed": [
+        { "description": "`loadAgents()` now uses `agents.ReadCanonicalDir()` supporting both `.md` and `.json` files", "commit": "b2d8fb1" },
+        { "description": "Each deployment target now receives complete plugin (agents, commands, skills, manifest)", "commit": "b2d8fb1" }
+      ],
+      "deprecated": [
+        { "description": "`generate plugins` subcommand - use `generate --specs=... --target=...` instead", "commit": "679e6dd" },
+        { "description": "`generate agents` subcommand - use `generate --specs=... --target=...` instead", "commit": "679e6dd" },
+        { "description": "`generate all` subcommand - use `generate --specs=... --target=...` instead", "commit": "679e6dd" },
+        { "description": "`generate deployment` subcommand - use `generate --specs=... --target=...` instead", "commit": "679e6dd" }
+      ],
+      "documentation": [
+        { "description": "Updated README CLI section for unified generate workflow", "commit": "88e7399" },
+        { "description": "Updated CLAUDE.md with generate package and CLI workflow sections", "commit": "88e7399" }
+      ]
+    },
+    {
       "version": "v0.8.0",
       "date": "2026-01-25",
       "highlights": [
